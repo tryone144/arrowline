@@ -3,9 +3,16 @@
  * powerline-like shell prompt generator
  *
  * file: config.h
- * v0.2 / 2015.05.07
+ * v0.3 / 2015.05.07
  *
  * (c) 2015 Bernd Busse
+ **/
+
+#ifndef _CONFIG_H
+#define _CONFIG_H
+
+/**
+ * CONFIGURATION HEADER
  **/
 
 /* number of directories to show in hirarchy */
@@ -19,3 +26,9 @@
 #define COLOR_FG_CWD 250 // light-grey
 #define COLOR_BG_CWD 240 // grey
 #define COLOR_SEP_CWD 245 // light-grey
+
+/* segment defines */
+#define USE_SEGMENT_HOST
+#define USE_SEGMENT_CWD
+
+#endif // _CONFIG_H
