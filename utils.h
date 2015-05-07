@@ -3,7 +3,7 @@
  * powerline-like shell prompt generator
  *
  * file: utils.c
- * v0.3 / 2015.05.07
+ * v0.4 / 2015.05.07
  *
  * (c) 2015 Bernd Busse
  **/
@@ -16,6 +16,8 @@
 /**
  * ENVIRONMENT HELPER FUNCTIONS AND WRAPPER
  **/
+
+extern int last_exit_status;
 
 /* copy path of current working directory into buf */
 int al_get_cwd(char* buf, size_t len);
@@ -41,7 +43,7 @@ int al_is_ssh_connection();
 /* check if user is root */
 int al_is_root_session();
 
-/* check if last shell command failed */
+/* check if last command has failed */
 int al_last_command_failed();
 
 /* check if str starts with pre */

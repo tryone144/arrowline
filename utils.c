@@ -3,7 +3,7 @@
  * powerline-like shell prompt generator
  *
  * file: utils.c
- * v0.3 / 2015.05.07
+ * v0.4 / 2015.05.07
  *
  * (c) 2015 Bernd Busse
  **/
@@ -19,6 +19,8 @@
 /**
  * ENVIRONMENT HELPER FUNCTIONS AND WRAPPER
  **/
+
+int last_exit_status = 0;
 
 /* copy username from environment into buf */
 int al_get_username(char* buf, size_t len) {
@@ -79,7 +81,11 @@ int al_is_root_session() {
     return 0; // NOT user root
 }
 
+/* check if last command has failed */
 int al_last_command_failed() {
+    if (last_exit_status != 0) {
+        return 1; // COMMAND FAILED
+    }
     return 0; // NOT failed
 }
 

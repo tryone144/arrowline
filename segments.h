@@ -3,7 +3,7 @@
  * powerline-like shell prompt generator
  *
  * file: segments.h
- * v0.3 / 2015.05.07
+ * v0.4 / 2015.05.07
  *
  * (c) 2015 Bernd Busse
  **/
@@ -15,18 +15,16 @@
  * SEGMENT GENERATORS: GATHER INFORMATION AND FORMAT ACCORDINGLY
  **/
 
-/* show username and hostname with colorcodes for ROOT or SSH */
-int al_segment_host(char* prompt, int* is_first, int* last_bg);
+/* generate end separator with terminal color reset */
+void al_separator_end(char* dest, int bg);
 
 /* show current working dir */
 int al_segment_cwd(char* prompt, int* is_first, int* last_bg);
 
-/* generate end separator with terminal color reset */
-void al_separator_end(char* dest, int bg);
+/* show username and hostname with colorcodes for ROOT or SSH */
+int al_segment_host(char* prompt, int* is_first, int* last_bg);
 
-
-//void al_gen_sep1(char* dest, int prev_bg, int next_bg, int* is_first);
-
-
+/* show last exit status if command failed */
+int al_segment_status(char* prompt, int* is_first, int* last_bg);
 
 #endif // _SEGMENTS_H

@@ -3,7 +3,7 @@
  * powerline-like shell prompt generator
  *
  * file: segments.c
- * v0.3 / 2015.05.07
+ * v0.4 / 2015.05.07
  *
  * (c) 2015 Bernd Busse
  **/
@@ -19,8 +19,10 @@
 #define FNT_BOLD 1
 #define FNT_NORMAL 22
 
-#define SEPARATOR1 ""
-#define SEPARATOR2 ""
+#define SEPARATOR_SEGMENT ""   // \uE0B0
+#define SEPARATOR_PATH ""      // \uE0B1
+#define THREE_DOTS "⋯"          // \u22EF
+#define BOLD_X "✘"              // \u2718
 
 /**
  * BASH ESCAPESEQUENCES AND SEGMENT GENERATION
@@ -36,13 +38,13 @@ void al_color_esc(char* dest, int fg, int bg, int style) {
 /* generate segment separator 1 with color codes */
 void al_separator_segment(char* dest, int prev_bg, int next_bg) {
     al_color_esc(dest, prev_bg, next_bg, FNT_NORMAL);
-    strcat(dest, SEPARATOR1);
+    strcat(dest, SEPARATOR_SEGMENT);
 }
 
 /* generate segment separator 2 with color codes */
 void al_separator_subsegment(char* dest, int fg, int bg) {
     al_color_esc(dest, fg, bg, FNT_NORMAL);
-    strcat(dest, SEPARATOR2);
+    strcat(dest, SEPARATOR_PATH);
 }
 
 /* generate end separator with terminal color reset */
@@ -51,7 +53,7 @@ void al_separator_end(char* dest, int bg) {
     sprintf(col, "\\[\\e[0;38;5;%d;49;22m\\]", bg);
 
     strcat(dest, col);
-    strcat(dest, SEPARATOR1);
+    strcat(dest, SEPARATOR_SEGMENT);
     strcat(dest, "\\[\\e[0m\\] ");
 }
 
@@ -116,6 +118,19 @@ int al_segment_host(char* prompt, int* is_first, int* last_bg) {
     return 0;
 }
 
+/* show last exit status if command failed */
+int al_segment_status(char* prompt, int* is_first, int* last_bg) {
+    char text[8];
+
+    // add segment to prompt buffer
+    if (al_last_command_failed()) {
+        snprintf(text, 8, " %s ", BOLD_X);
+        al_gen_segment(prompt, COLOR_FG_STATUS, COLOR_BG_STATUS, FNT_BOLD, text, is_first, last_bg);
+    }
+
+    return 0;
+}
+
 /* show current working dir */
 int al_segment_cwd(char* prompt, int* is_first, int* last_bg) {
     char dirs[CWD_LEN + 1][64];
@@ -145,7 +160,7 @@ int al_segment_cwd(char* prompt, int* is_first, int* last_bg) {
     for (int i = 0; i <= CWD_LEN; i++) {
         if ((strlen(dirs[i]) == 0) || (i == CWD_LEN)) {
             if (al_get_dir_count(base) > CWD_LEN) {
-                strcpy(dirs[i], "⋯"); // deep in hirarchy
+                strcpy(dirs[i], THREE_DOTS); // deep in hirarchy
             } else if (al_string_startswith(cwd, home)) {
                 strcpy(dirs[i], "~"); // home directory
             } else {
