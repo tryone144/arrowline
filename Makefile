@@ -2,7 +2,7 @@
 CC = gcc
 
 # Compiler Flags
-CFLAGS = -Wall -std=gnu11
+CFLAGS = -Wall -O2 -std=gnu11
 # Linker Flags
 LDFLAGS =
 

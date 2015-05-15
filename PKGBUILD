@@ -1,6 +1,6 @@
 # Maintainer: Bernd Busse <bernd AT bussenet DOT de>
 
-pkgname=arrowline-giit
+pkgname=arrowline-git
 _pkgname=arrowline
 pkgver=v0.4.7e24433
 pkgrel=1
