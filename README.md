@@ -51,25 +51,14 @@ Put into your `.bashrc`:
     }
     export PROMPT_COMMAND=_update_ps1
 
-### zsh
 
-Put into your .zshrc:
-    
-    # arrowline prompt
-    function arrowline_precmd() {
-        export PS1="$(arrowline ${?} 2> /dev/null)"
-    }
-    
-    function install_arrowline_precmd() {
-        for s in "${precmd_functions[@]}"; do
-            if [ "${s}" = "arrowline_precmd" ]; then
-                return
-            fi
-        done
-        precmd_functions+=(arrowline_precmd)
-    }
-    install_arrowline_precmd
+TODO
+----
 
+- Make segement generation more modular
+- zsh compatible
+- 'flat' mode (without powerline chars)
+- add new segments
 
 License
 -------
