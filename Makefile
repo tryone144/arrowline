@@ -4,7 +4,7 @@ CC = gcc
 # Compiler Flags
 CFLAGS = -Wall -O2 -std=gnu11
 # Linker Flags
-LDFLAGS =
+LDFLAGS = -lgit2
 
 SRCS = arrowline.c utils.c segments.c
 OBJS = arrowline.o utils.o segments.o

@@ -9,6 +9,7 @@ Features
 - single executable, no external processes
 - configurable with a header file (like dwm)
 - powerline-style
+- git branch name and status
 
 
 Installation
@@ -28,6 +29,8 @@ Systemwide installation (as root) into `/usr/local/bin`:
 
     make install
 
+If you install by hand make sure that `libgit2` is installed for git support.
+
 
 Configuration
 -------------
@@ -35,7 +38,15 @@ Configuration
 All configuration takes place in `config.h`.
 
 - Define the colors for the segments.
-- Select which segments to show.
+- Select which segments to show:
+
+    - `STATUS`: display red X if last command's exit status != 0
+    - `HOST`: display username and hostname
+    - `CWD`: display `CWD_LEN` (defaults to 3) folders of current working directory
+    - `VCS`: display branch and status if current working dir is inside a version controlled directory
+        
+        - currently only supports git    
+        - please note that status fetching may be slow in large projects
 
 
 Using arrowline

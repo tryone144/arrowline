@@ -3,7 +3,7 @@
  * powerline-like shell prompt generator
  *
  * file: segments.h
- * v0.4 / 2015.05.07
+ * v0.5 / 2015.06.18
  *
  * (c) 2015 Bernd Busse
  **/
@@ -26,5 +26,8 @@ int al_segment_host(char* prompt, int* is_first, int* last_bg);
 
 /* show last exit status if command failed */
 int al_segment_status(char* prompt, int* is_first, int* last_bg);
+
+/* show vcs status if cwd is part of a vcs */
+int al_segment_vcs(char* prompt, int* is_first, int* last_bg);
 
 #endif // _SEGMENTS_H

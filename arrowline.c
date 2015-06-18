@@ -3,7 +3,7 @@
  * powerline-like shell prompt generator
  *
  * file: arrowline.c
- * v0.4 / 2015.05.07
+ * v0.5 / 2015.06.18
  *
  * (c) 2015 Bernd Busse
  **/
@@ -11,6 +11,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
+#include <git2.h>
 
 #include "config.h"
 #include "utils.h"
@@ -28,6 +29,9 @@ int main(int argc, char** argv) {
     char prompt[PROMPT_LEN] = {0}; // prompt buffer
     int sep_bg = 0;
     int is_first = 1;
+
+    // init libgit2
+    git_libgit2_init();
 
 #ifdef USE_SEGMENT_STATUS
     // EXIT STATUS
@@ -52,6 +56,17 @@ int main(int argc, char** argv) {
         return EXIT_FAILURE;
     }
 #endif // USE_SEGMENT_CWD
+
+#ifdef USE_SEGMENT_VCS
+    // VCS BRANCH STATUS (GIT)
+    if (al_segment_vcs(prompt, &is_first, &sep_bg) != 0) {
+        perror("ERROR: can't generate 'vcs stats' segment");
+        return EXIT_FAILURE;
+    }
+#endif
+
+    // shutdown libgit2
+    git_libgit2_shutdown();
 
     // END PROMPT / RESET SEPARATOR
     al_separator_end(prompt, sep_bg);

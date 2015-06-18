@@ -3,7 +3,7 @@
  * powerline-like shell prompt generator
  *
  * file: segments.c
- * v0.4 / 2015.05.07
+ * v0.5 / 2015.06.18
  *
  * (c) 2015 Bernd Busse
  **/
@@ -23,6 +23,8 @@
 #define SEPARATOR_PATH ""      // \uE0B1
 #define THREE_DOTS "⋯"          // \u22EF
 #define BOLD_X "✘"              // \u2718
+#define BRANCH ""              // \uE0A0
+#define PLUSMINUS "±"           // \u00B1
 
 /**
  * BASH ESCAPESEQUENCES AND SEGMENT GENERATION
@@ -58,7 +60,7 @@ void al_separator_end(char* dest, int bg) {
 }
 
 /* generate segment with color codes and separator at begining */
-void al_gen_segment(char* dest, int cur_fg, int cur_bg, int style, char* text, int* is_first, int *last_bg) {
+void al_gen_segment(char* dest, int cur_fg, int cur_bg, int style, const char* text, int* is_first, int *last_bg) {
     if ((is_first != NULL) && (last_bg != NULL)) {
         // add separator if not first segment
         if (*is_first == 0) {
@@ -75,7 +77,7 @@ void al_gen_segment(char* dest, int cur_fg, int cur_bg, int style, char* text, i
 }
 
 /* generate subsegment with color codes and path separator at begining */
-void al_gen_subsegment(char* dest, int cur_fg, int cur_bg, int sep_fg, int style, char* text) {
+void al_gen_subsegment(char* dest, int cur_fg, int cur_bg, int sep_fg, int style, const char* text) {
     // add path separator
     al_separator_subsegment(dest, sep_fg, cur_bg);
     // add color escape
@@ -191,4 +193,58 @@ int al_segment_cwd(char* prompt, int* is_first, int* last_bg) {
     }
 
     return 0;
+}
+
+/* show branch status for git repository */
+int al_segment_git(char* prompt, int* is_first, int* last_bg) {
+    char text[64];
+    char cwd[512];
+    char branch[32];
+
+    char icon[4] = {0};
+    int color = 0;
+    
+    git_repository* repo = NULL;
+    
+    if (al_get_cwd(cwd, 512) != 0) {
+        return -1;
+    }
+
+    // get information from repository if exists
+    if (al_git_open_repo(cwd, &repo) != 0) {
+        return 1;
+    }
+
+    // get current branch name
+    if (al_git_get_branch(branch, 32, repo) != 0) {
+        git_repository_free(repo);
+        return -1;
+    }
+
+    // change color and icon on branch state
+    if (al_git_is_dirty(repo)) {
+        color = COLOR_BG_VCS_DIRTY;
+        strncpy(icon, PLUSMINUS, 4);
+    } else {
+        color = COLOR_BG_VCS_CLEAN;
+        strncpy(icon, BRANCH, 4);
+    }
+
+    // add segment to prompt buffer
+    snprintf(text, 64, " %s %s ", icon, branch);
+    al_gen_segment(prompt, COLOR_FG_VCS, color, FNT_BOLD, text, is_first, last_bg);
+
+    git_repository_free(repo);
+    return 0;
+}
+
+/* show vcs status if cwd is part of a vcs */
+int al_segment_vcs(char* prompt, int* is_first, int* last_bg) {
+    int ret = al_segment_git(prompt, is_first, last_bg);
+    if (ret == 0 || ret == 1) {
+        // generated or skipped segment
+        return 0;
+    } else {
+        return -1; // error
+    }
 }
