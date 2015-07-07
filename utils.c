@@ -3,19 +3,19 @@
  * powerline-like shell prompt generator
  *
  * file: utils.c
- * v0.6 / 2015.07.07
+ * v0.6.2 / 2015.07.07
  *
  * (c) 2015 Bernd Busse
+ * The MIT License (MIT)
  **/
 
 #include <limits.h>
 #include <pwd.h>
 #include <stdlib.h>
+#include <stdio.h>
 #include <string.h>
 #include <unistd.h>
 #include <git2.h>
-
-#include <stdio.h>
 
 #include "utils.h"
 
@@ -99,11 +99,11 @@ int al_last_command_failed() {
 void al_resize_char_buffer(char** dest, const char* buf, int* destlen, int step) {
     if ((strlen(*dest) + strlen(buf) + 1) > *destlen) {
         *destlen = *destlen + step;
-        char* newbuf = (char*)realloc(*dest, *destlen);
+        char* newbuf = realloc(*dest, *destlen);
         if (newbuf == NULL) {
             perror("ERROR: can't allocate larger prompt buffer");
             free(*dest);
-            exit(1);
+            exit(EXIT_FAILURE);
         } else {
             *dest = newbuf;
         }
@@ -122,7 +122,7 @@ int al_string_startswith(const char* str, const char* pre) {
 /* return directory level of path */
 int al_get_dir_count(const char* path) {
     int c = 1;
-    char* occ = path;
+    const char* occ = path;
 
     if (path == NULL) {
         return -1; // error

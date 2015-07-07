@@ -3,9 +3,10 @@
  * powerline-like shell prompt generator
  *
  * file: segments.h
- * v0.6 / 2015.07.07
+ * v0.6.2 / 2015.07.07
  *
  * (c) 2015 Bernd Busse
+ * The MIT License (MIT)
  **/
 
 #ifndef _SEGMENTS_h

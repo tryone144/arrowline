@@ -3,9 +3,10 @@
  * powerline-like shell prompt generator
  *
  * file: segments.c
- * v0.6 / 2015.07.07
+ * v0.6.2 / 2015.07.07
  *
  * (c) 2015 Bernd Busse
+ * The MIT License (MIT)
  **/
 
 #include <stdio.h>
@@ -19,8 +20,14 @@
 #define FNT_BOLD 1
 #define FNT_NORMAL 22
 
-#define SEPARATOR_SEGMENT ""   // \uE0B0
-#define SEPARATOR_PATH ""      // \uE0B1
+#ifdef USE_POWERLINE_SYMBOLS
+    #define SEPARATOR_SEGMENT ""   // \uE0B0
+    #define SEPARATOR_PATH ""      // \uE0B1
+#else
+    #define SEPARATOR_SEGMENT ""
+    #define SEPARATOR_PATH "/"
+#endif
+
 #define THREE_DOTS "⋯"          // \u22EF
 #define BOLD_X "✘"              // \u2718
 #define BRANCH ""              // \uE0A0
@@ -33,9 +40,15 @@
 /* escape color codes for BASH prompt */
 void al_color_esc(char* dest, int len, int fg, int bg, int style) {
     char buf[48] = { 0 };
+#if OUTPUT_TERM == OUTPUT_BASH
     snprintf(buf, 48, "\\[\\e[0;38;5;%d;48;5;%d;%dm\\]", fg, bg, style);
+#elif OUTPUT_TERM == OUTPUT_ZSH
+    snprintf(buf, 48, "%%{\\e[0;38;5;%d;48;5;%d;%dm%%}", fg, bg, style);
+#else // PLAIN
+    snprintf(buf, 48, "\\e[0;38;5;%d;48;5;%d;%dm", fg, bg, style);
+#endif // OUTPUT_TERM
     buf[47] = '\0';
-
+    
     strncat(dest, buf, len);
 }
 
@@ -62,11 +75,17 @@ void al_separator_subsegment(char* dest, int len, int fg, int bg) {
 /* generate end separator with terminal color reset */
 void al_separator_end(char** dest, int* maxlen, int bg) {
     char buf[64] = { 0 };
+#if OUTPUT_TERM == OUTPUT_BASH
     snprintf(buf, 64, "\\[\\e[0;38;5;%d;49;22m\\]%s\\[\\e[0m\\] ", bg, SEPARATOR_SEGMENT);
+#elif OUTPUT_TERM == OUTPUT_ZSH
+    snprintf(buf, 64, "%%{\\e[0;38;5;%d;49;22m%%}%s%%{\\e[0m%%} ", bg, SEPARATOR_SEGMENT);
+#else // PLAIN
+    snprintf(buf, 64, "\\e[0;38;5;%d;49;22m%s\\e[0m ", bg, SEPARATOR_SEGMENT);
+#endif // OUTPUT_TERM
     buf[63] = '\0';
     
     // add to promptline
-    al_resize_char_buffer(dest, buf, maxlen, PROMPT_LEN_STEP);
+    al_resize_char_buffer(dest, buf, maxlen, 128);
     strncat(*dest, buf, *maxlen - strlen(*dest) + 1);
 }
 
@@ -90,7 +109,7 @@ void al_gen_segment(char** dest, int* maxlen, int cur_fg, int cur_bg, int style,
     buf[127] = '\0';
     
     // add to promptline
-    al_resize_char_buffer(dest, buf, maxlen, PROMPT_LEN_STEP);
+    al_resize_char_buffer(dest, buf, maxlen, 128);
     strncat(*dest, buf, *maxlen - strlen(*dest) + 1);
 }
 
@@ -107,7 +126,7 @@ void al_gen_subsegment(char** dest, int* maxlen, int cur_fg, int cur_bg, int sep
     buf[127] = '\0';
     
     // add to promptline
-    al_resize_char_buffer(dest, buf, maxlen, PROMPT_LEN_STEP);
+    al_resize_char_buffer(dest, buf, maxlen, 128);
     strncat(*dest, buf, *maxlen - strlen(*dest) + 1);
 }
 
@@ -265,7 +284,12 @@ int al_segment_git(char** prompt, int* prompt_len, int* is_first, int* last_bg) 
 
 /* show vcs status if cwd is part of a vcs */
 int al_segment_vcs(char** prompt, int* prompt_len, int* is_first, int* last_bg) {
-    int ret = al_segment_git(prompt, prompt_len, is_first, last_bg);
+    int ret = 1;
+
+#ifdef USE_VCS_GIT
+    ret = al_segment_git(prompt, prompt_len, is_first, last_bg);
+#endif // USE_VCS_GIT
+
     if (ret == 0 || ret == 1) {
         // generated or skipped segment
         return 0;

@@ -2,7 +2,7 @@
 
 pkgname=arrowline-git
 _pkgname=arrowline
-pkgver=v0.6
+pkgver=v0.6.2
 pkgrel=1
 pkgdesc="Lightweight shell promptline generator written in pure C"
 arch=('i686' 'x86_64')
