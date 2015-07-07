@@ -3,7 +3,7 @@
  * powerline-like shell prompt generator
  *
  * file: utils.c
- * v0.5 / 2015.06.18
+ * v0.6 / 2015.07.07
  *
  * (c) 2015 Bernd Busse
  **/
@@ -44,13 +44,20 @@ int al_is_ssh_connection();
 /* check if user is root */
 int al_is_root_session();
 
-// TODO: Documentation
+/* open git repository at path if it actually is a git repository */
 int al_git_open_repo(const char* path, git_repository** repo);
+
+/* copy name of current git branch into buf */
 int al_git_get_branch(char* buf, size_t len, git_repository* repo);
+
+/* check if current git repo is clean or dirty */
 int al_git_is_dirty(git_repository* repo);
 
 /* check if last command has failed */
 int al_last_command_failed();
+
+/* enlarge buffer if not large enough */
+void al_resize_char_buffer(char** dest, const char* buf, int* destlen, int step);
 
 /* check if str starts with pre */
 int al_string_startswith(const char* str, const char* pre);

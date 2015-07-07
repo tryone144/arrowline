@@ -3,7 +3,7 @@
  * powerline-like shell prompt generator
  *
  * file: config.h
- * v0.5 / 2015.06.18
+ * v0.6 / 2015.07.07
  *
  * (c) 2015 Bernd Busse
  **/
@@ -14,6 +14,7 @@
 /**
  * CONFIGURATION HEADER
  **/
+#define PROMPT_LEN_STEP 64
 
 /* number of directories to show in hirarchy */
 #define CWD_LEN 3

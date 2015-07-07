@@ -3,7 +3,7 @@
  * powerline-like shell prompt generator
  *
  * file: utils.c
- * v0.5 / 2015.06.18
+ * v0.6 / 2015.07.07
  *
  * (c) 2015 Bernd Busse
  **/
@@ -14,6 +14,8 @@
 #include <string.h>
 #include <unistd.h>
 #include <git2.h>
+
+#include <stdio.h>
 
 #include "utils.h"
 
@@ -91,6 +93,21 @@ int al_last_command_failed() {
         return 1; // COMMAND FAILED
     }
     return 0; // NOT failed
+}
+
+/* enlarge buffer if not large enough */
+void al_resize_char_buffer(char** dest, const char* buf, int* destlen, int step) {
+    if ((strlen(*dest) + strlen(buf) + 1) > *destlen) {
+        *destlen = *destlen + step;
+        char* newbuf = (char*)realloc(*dest, *destlen);
+        if (newbuf == NULL) {
+            perror("ERROR: can't allocate larger prompt buffer");
+            free(*dest);
+            exit(1);
+        } else {
+            *dest = newbuf;
+        }
+    }
 }
 
 /* check if str starts with pre */
