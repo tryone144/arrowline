@@ -63,7 +63,7 @@ int al_is_root_session();
 int al_last_command_failed();
 
 /* enlarge buffer if not large enough */
-void al_resize_char_buffer(char** dest, const char* buf, int* destlen, int step);
+void al_resize_char_buffer(char** dest, const char* buf, unsigned int* destlen, int step);
 
 /* check if str starts with pre */
 int al_string_startswith(const char* str, const char* pre);

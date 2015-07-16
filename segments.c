@@ -3,7 +3,7 @@
  * powerline-like shell prompt generator
  *
  * file: segments.c
- * v0.6.2 / 2015.07.07
+ * v0.6.3 / 2015.07.16
  *
  * (c) 2015 Bernd Busse
  * The MIT License (MIT)
@@ -39,94 +39,94 @@
 
 /* escape color codes for BASH prompt */
 void al_color_esc(char* dest, int len, int fg, int bg, int style) {
-    char buf[48] = { 0 };
-#if OUTPUT_TERM == OUTPUT_BASH
-    snprintf(buf, 48, "\\[\\e[0;38;5;%d;48;5;%d;%dm\\]", fg, bg, style);
-#elif OUTPUT_TERM == OUTPUT_ZSH
-    snprintf(buf, 48, "%%{\\e[0;38;5;%d;48;5;%d;%dm%%}", fg, bg, style);
+    char buf[BUF_FORMAT_LEN] = { 0 };
+#if OUTPUT_FORMAT == OUTPUT_BASH
+    snprintf(buf, BUF_FORMAT_LEN, "\\[\\e[0;38;5;%d;48;5;%d;%dm\\]", fg, bg, style);
+#elif OUTPUT_FORMAT == OUTPUT_ZSH
+    snprintf(buf, BUF_FORMAT_LEN, "%%{\\e[0;38;5;%d;48;5;%d;%dm%%}", fg, bg, style);
 #else // PLAIN
-    snprintf(buf, 48, "\\e[0;38;5;%d;48;5;%d;%dm", fg, bg, style);
+    snprintf(buf, BUF_FORMAT_LEN, "\\e[0;38;5;%d;48;5;%d;%dm", fg, bg, style);
 #endif // OUTPUT_TERM
-    buf[47] = '\0';
+    buf[BUF_FORMAT_LEN - 1] = '\0';
     
     strncat(dest, buf, len);
 }
 
 /* generate segment separator 1 with color codes */
 void al_separator_segment(char* dest, int len, int prev_bg, int next_bg) {
-    char buf[48] = { 0 };
-    al_color_esc(buf, 48, prev_bg, next_bg, FNT_NORMAL);
-    strncat(buf, SEPARATOR_SEGMENT, 48 - strlen(buf));
-    buf[47] = '\0';
+    char buf[BUF_FORMAT_LEN] = { 0 };
+    al_color_esc(buf, BUF_FORMAT_LEN, prev_bg, next_bg, FNT_NORMAL);
+    strncat(buf, SEPARATOR_SEGMENT, BUF_FORMAT_LEN - strlen(buf));
+    buf[BUF_FORMAT_LEN - 1] = '\0';
 
     strncat(dest, buf, len);
 }
 
 /* generate segment separator 2 with color codes */
 void al_separator_subsegment(char* dest, int len, int fg, int bg) {
-    char buf[48] = { 0 };
-    al_color_esc(dest, 48, fg, bg, FNT_NORMAL);
-    strncat(buf, SEPARATOR_PATH, 48 - strlen(buf));
-    buf[47] = '\0';
+    char buf[BUF_FORMAT_LEN] = { 0 };
+    al_color_esc(dest, BUF_FORMAT_LEN, fg, bg, FNT_NORMAL);
+    strncat(buf, SEPARATOR_PATH, BUF_FORMAT_LEN - strlen(buf));
+    buf[BUF_FORMAT_LEN - 1] = '\0';
     
     strncat(dest, buf, len);
 }
 
 /* generate end separator with terminal color reset */
-void al_separator_end(char** dest, int* maxlen, int bg) {
-    char buf[64] = { 0 };
-#if OUTPUT_TERM == OUTPUT_BASH
-    snprintf(buf, 64, "\\[\\e[0;38;5;%d;49;22m\\]%s\\[\\e[0m\\] ", bg, SEPARATOR_SEGMENT);
-#elif OUTPUT_TERM == OUTPUT_ZSH
-    snprintf(buf, 64, "%%{\\e[0;38;5;%d;49;22m%%}%s%%{\\e[0m%%} ", bg, SEPARATOR_SEGMENT);
+void al_separator_end(char** dest, unsigned int* maxlen, int bg) {
+    char buf[BUF_FORMAT_LEN] = { 0 };
+#if OUTPUT_FORMAT == OUTPUT_BASH
+    snprintf(buf, BUF_FORMAT_LEN, "\\[\\e[0;38;5;%d;49;22m\\]%s\\[\\e[0m\\] ", bg, SEPARATOR_SEGMENT);
+#elif OUTPUT_FORMAT == OUTPUT_ZSH
+    snprintf(buf, BUF_FORMAT_LEN, "%%{\\e[0;38;5;%d;49;22m%%}%s%%{\\e[0m%%} ", bg, SEPARATOR_SEGMENT);
 #else // PLAIN
-    snprintf(buf, 64, "\\e[0;38;5;%d;49;22m%s\\e[0m ", bg, SEPARATOR_SEGMENT);
+    snprintf(buf, BUF_FORMAT_LEN, "\\e[0;38;5;%d;49;22m%s\\e[0m ", bg, SEPARATOR_SEGMENT);
 #endif // OUTPUT_TERM
-    buf[63] = '\0';
+    buf[BUF_FORMAT_LEN - 1] = '\0';
     
     // add to promptline
-    al_resize_char_buffer(dest, buf, maxlen, 128);
+    al_resize_char_buffer(dest, buf, maxlen, BUF_PROMPT_LEN);
     strncat(*dest, buf, *maxlen - strlen(*dest) + 1);
 }
 
 /* generate segment with color codes and separator at begining */
-void al_gen_segment(char** dest, int* maxlen, int cur_fg, int cur_bg, int style, const char* text, int* is_first, int *last_bg) {
-    char buf[128] = { 0 };
+void al_gen_segment(char** dest, unsigned int* maxlen, int cur_fg, int cur_bg, int style, const char* text, int* is_first, int *last_bg) {
+    char buf[BUF_PROMPT_LEN] = { 0 };
 
     if ((is_first != NULL) && (last_bg != NULL)) {
         // add separator if not first segment
         if (*is_first == 0) {
-            al_separator_segment(buf, 128, *last_bg, cur_bg);
+            al_separator_segment(buf, BUF_PROMPT_LEN, *last_bg, cur_bg);
         }
         *is_first = 0;
         *last_bg = cur_bg;
     }
 
     // add color escape
-    al_color_esc(buf, 128 - strlen(buf), cur_fg, cur_bg, style);
+    al_color_esc(buf, BUF_PROMPT_LEN - strlen(buf), cur_fg, cur_bg, style);
     // add text
-    strncat(buf, text, 128 - strlen(buf));
-    buf[127] = '\0';
+    strncat(buf, text, BUF_PROMPT_LEN - strlen(buf));
+    buf[BUF_PROMPT_LEN - 1] = '\0';
     
     // add to promptline
-    al_resize_char_buffer(dest, buf, maxlen, 128);
+    al_resize_char_buffer(dest, buf, maxlen, BUF_PROMPT_LEN);
     strncat(*dest, buf, *maxlen - strlen(*dest) + 1);
 }
 
 /* generate subsegment with color codes and path separator at begining */
-void al_gen_subsegment(char** dest, int* maxlen, int cur_fg, int cur_bg, int sep_fg, int style, const char* text) {
-    char buf[128] = { 0 };
+void al_gen_subsegment(char** dest, unsigned int* maxlen, int cur_fg, int cur_bg, int sep_fg, int style, const char* text) {
+    char buf[BUF_PROMPT_LEN] = { 0 };
 
     // add path separator
-    al_separator_subsegment(buf, 128, sep_fg, cur_bg);
+    al_separator_subsegment(buf, BUF_PROMPT_LEN, sep_fg, cur_bg);
     // add color escape
-    al_color_esc(buf, 128 - strlen(buf), cur_fg, cur_bg, style);
+    al_color_esc(buf, BUF_PROMPT_LEN - strlen(buf), cur_fg, cur_bg, style);
     // add text
-    strncat(buf, text, 128 - strlen(buf));
-    buf[127] = '\0';
+    strncat(buf, text, BUF_PROMPT_LEN - strlen(buf));
+    buf[BUF_PROMPT_LEN - 1] = '\0';
     
     // add to promptline
-    al_resize_char_buffer(dest, buf, maxlen, 128);
+    al_resize_char_buffer(dest, buf, maxlen, BUF_PROMPT_LEN);
     strncat(*dest, buf, *maxlen - strlen(*dest) + 1);
 }
 
@@ -136,7 +136,7 @@ void al_gen_subsegment(char** dest, int* maxlen, int cur_fg, int cur_bg, int sep
  **/
 
 /* show username and hostname with colorcodes for ROOT or SSH */
-int al_segment_host(char** prompt, int* prompt_len, int* is_first, int* last_bg) {
+int al_segment_host(char** prompt, unsigned int* prompt_len, int* is_first, int* last_bg) {
     char text[64];
     int color = COLOR_BG_HOST_USER;
 
@@ -165,7 +165,7 @@ int al_segment_host(char** prompt, int* prompt_len, int* is_first, int* last_bg)
 }
 
 /* show last exit status if command failed */
-int al_segment_status(char** prompt, int* prompt_len, int* is_first, int* last_bg) {
+int al_segment_status(char** prompt, unsigned int* prompt_len, int* is_first, int* last_bg) {
     char text[8];
 
     // add segment to prompt buffer
@@ -178,7 +178,7 @@ int al_segment_status(char** prompt, int* prompt_len, int* is_first, int* last_b
 }
 
 /* show current working dir */
-int al_segment_cwd(char** prompt, int* prompt_len, int* is_first, int* last_bg) {
+int al_segment_cwd(char** prompt, unsigned int* prompt_len, int* is_first, int* last_bg) {
     char dirs[CWD_LEN + 1][64];
 
     char home[64];
@@ -241,7 +241,7 @@ int al_segment_cwd(char** prompt, int* prompt_len, int* is_first, int* last_bg) 
 
 #ifdef USE_VCS_GIT
 /* show branch status for git repository */
-int al_segment_git(char** prompt, int* prompt_len, int* is_first, int* last_bg) {
+int al_segment_git(char** prompt, unsigned int* prompt_len, int* is_first, int* last_bg) {
     char text[64];
     char cwd[512];
     char branch[32];
@@ -285,7 +285,7 @@ int al_segment_git(char** prompt, int* prompt_len, int* is_first, int* last_bg) 
 #endif // USE_VCS_GIT
 
 /* show vcs status if cwd is part of a vcs */
-int al_segment_vcs(char** prompt, int* prompt_len, int* is_first, int* last_bg) {
+int al_segment_vcs(char** prompt, unsigned int* prompt_len, int* is_first, int* last_bg) {
     int ret = 1;
 
 #ifdef USE_VCS_GIT

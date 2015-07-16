@@ -1,28 +1,51 @@
+# ARROWLINE - powerline-like shell prompt generator
+# (c) 2015 Bernd Busse
+
+NAME = arrowline
+VERSION = 0.6.3
+
 # C Compiler
-CC = gcc
+CC := $(CC) -std=gnu11
+
+base_CFLAGS = -Wall -Wextra -pedantic -O2 -g
+base_LIBS = 
+
+pkgs = libgit2
+pkgs_CFLAGS = $(shell pkg-config --cflags $(pkgs))
+pkgs_LIBS = $(shell pkg-config --libs $(pkgs))
+
+# Configuration
+config_CFLAGS = -DUSE_VCS_GIT
 
 # Compiler Flags
-CFLAGS = -Wall -O2 -std=gnu11
+CFLAGS += -DPROGNAME=\"${NAME}\" -DVERSION=\"${VERSION}\"
+CFLAGS := $(base_CFLAGS) $(pkgs_CFLAGS) $(config_CFLAGS) $(CFLAGS)
 # Linker Flags
-LDFLAGS = -lgit2
+LDFLAGS := $(base_LIBS) $(pkgs_LIBS)
 
-SRCS = arrowline.c utils.c segments.c
-OBJS = arrowline.o utils.o segments.o
 # Executable
-EXE = arrowline
+EXE_PROMPT = arrowline
+
+# Sources
+SRCS = segments.c utils.c
+SRCS_PROMPT = arrowline.c
+
+OBJS = $(SRCS:.c=.o)
+OBJS_PROMPT = $(SRCS_PROMPT:.c=.o)
 
 PREFIX = /usr/local
 
-all: $(EXE)
+all: $(EXE_PROMPT)
 
-$(EXE): $(OBJS)
-	$(CC) $(OBJS) $(LDFLAGS) -o $@
+$(EXE_PROMPT): $(OBJS) $(OBJS_PROMPT)
+	$(CC) $(OBJS) $(OBJS_PROMPT) $(LDFLAGS) -o $@
 
-.o: $(SRCS)
+.o: $(SRCS) $(SRCS_PROMPT)
 	$(CC) $(CFLAGS) $< -o $@
 
+.PHONY: clean
 clean:
-	rm *.o && rm $(EXE)
+	rm -f *.o && rm -f $(EXE_PROMPT)
 
-install: $(EXE)
-	install -Dm755 $(EXE) $(PREFIX)/bin/$(EXE)
+install: $(EXE_PROMPT)
+	install -Dm755 $(EXE_PROMPT) $(PREFIX)/bin/$(EXE_PROMPT)

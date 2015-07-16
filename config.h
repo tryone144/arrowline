@@ -3,7 +3,7 @@
  * powerline-like shell prompt generator
  *
  * file: config.h
- * v0.6.2 / 2015.07.07
+ * v0.6.3 / 2015.07.16
  *
  * (c) 2015 Bernd Busse
  * The MIT License (MIT)
@@ -20,11 +20,20 @@
 #define SEGMENT_STATUS 1
 #define SEGMENT_HOST 2
 #define SEGMENT_CWD 4
-#define SEGMENT_VCS 8
+
+#ifdef USE_VCS_GIT
+    #define SEGMENT_VCS 8
+#endif // USE_VCS_GIT
+
+#define BUF_FORMAT_LEN 48
+#define BUF_PROMPT_LEN 128
 
 /**
  * CONFIGURATION HEADER
  **/
+
+/* number of directories to show in hirarchy */
+#define CWD_LEN 3
 
 /* color codes for the segments */
 #define COLOR_FG_HOST 16        // black
@@ -43,23 +52,17 @@
 #define COLOR_BG_VCS_CLEAN 82   // dull-green
 #define COLOR_BG_VCS_DIRTY 208  // orange
 
-/* number of directories to show in hirarchy */
-#define CWD_LEN 3
-
-/* use vcs status of git */
-#define USE_VCS_GIT
-
 /* output styles */
-#define OUTPUT_TERM OUTPUT_BASH
 #define USE_POWERLINE_SYMBOLS
+#define OUTPUT_FORMAT OUTPUT_BASH
 
 /* segments to use */
-const static int NUM_SEGMENTS = 4;
-const static unsigned int USE_SEGMENTS[] = {
+static const int NUM_SEGMENTS = 4;
+static const unsigned int USE_SEGMENTS[] = {
     SEGMENT_STATUS,
     SEGMENT_HOST,
     SEGMENT_CWD,
-    SEGMENT_VCS
+//    SEGMENT_VCS
 };
 
 #endif // _CONFIG_H

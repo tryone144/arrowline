@@ -3,7 +3,7 @@
  * powerline-like shell prompt generator
  *
  * file: arrowline.c
- * v0.6.2 / 2015.07.07
+ * v0.6.3 / 2015.07.16
  *
  * (c) 2015 Bernd Busse
  * The MIT License (MIT)
@@ -12,7 +12,10 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
-#include <git2.h>
+
+#ifdef USE_VCS_GIT
+    #include <git2.h>
+#endif // USE_VCS_GIT
 
 #include "config.h"
 #include "utils.h"
@@ -26,7 +29,7 @@ int main(int argc, char** argv) {
     }
 
     char* prompt; // prompt buffer
-    int prompt_len = 128;
+    unsigned int prompt_len = BUF_PROMPT_LEN;
     if ((prompt = calloc(prompt_len, sizeof(char))) == NULL) {
         perror("ERROR: can't allocate prompt buffer");
         return EXIT_FAILURE;

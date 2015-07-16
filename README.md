@@ -68,6 +68,7 @@ TODO
 
 - zsh usage information
 - add new segments
+- support for status bars (i3bar, dzen2, lemonbar)
 
 
 License

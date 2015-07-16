@@ -3,7 +3,7 @@
  * powerline-like shell prompt generator
  *
  * file: utils.c
- * v0.6.2 / 2015.07.07
+ * v0.6.3 / 2015.07.16
  *
  * (c) 2015 Bernd Busse
  * The MIT License (MIT)
@@ -27,8 +27,8 @@
  **/
 
 #ifdef USE_VCS_GIT
-const int INDEX_FLAGS = GIT_STATUS_INDEX_NEW | GIT_STATUS_INDEX_MODIFIED | GIT_STATUS_INDEX_DELETED | GIT_STATUS_INDEX_RENAMED | GIT_STATUS_INDEX_TYPECHANGE;
-const int WT_FLAGS = GIT_STATUS_WT_NEW | GIT_STATUS_WT_MODIFIED | GIT_STATUS_WT_DELETED | GIT_STATUS_WT_RENAMED | GIT_STATUS_WT_TYPECHANGE | GIT_STATUS_WT_TYPECHANGE;
+static const int INDEX_FLAGS = GIT_STATUS_INDEX_NEW | GIT_STATUS_INDEX_MODIFIED | GIT_STATUS_INDEX_DELETED | GIT_STATUS_INDEX_RENAMED | GIT_STATUS_INDEX_TYPECHANGE;
+static const int WT_FLAGS = GIT_STATUS_WT_NEW | GIT_STATUS_WT_MODIFIED | GIT_STATUS_WT_DELETED | GIT_STATUS_WT_RENAMED | GIT_STATUS_WT_TYPECHANGE | GIT_STATUS_WT_TYPECHANGE;
 #endif // USE_VCS_GIT
 
 int last_exit_status = 0;
@@ -101,7 +101,7 @@ int al_last_command_failed() {
 }
 
 /* enlarge buffer if not large enough */
-void al_resize_char_buffer(char** dest, const char* buf, int* destlen, int step) {
+void al_resize_char_buffer(char** dest, const char* buf, unsigned int* destlen, int step) {
     if ((strlen(*dest) + strlen(buf) + 1) > *destlen) {
         *destlen = *destlen + step;
         char* newbuf = realloc(*dest, *destlen);
@@ -210,7 +210,8 @@ int al_git_is_dirty(git_repository* repo) {
     int found_modified = 0;
     
     git_status_list* status = NULL;
-    git_status_options opts = GIT_STATUS_OPTIONS_INIT;
+    git_status_options opts;
+    git_status_init_options(&opts, GIT_STATUS_OPTIONS_VERSION);
     opts.flags |= GIT_STATUS_OPT_EXCLUDE_SUBMODULES;
     opts.flags |= GIT_STATUS_OPT_INCLUDE_UNTRACKED;
 
