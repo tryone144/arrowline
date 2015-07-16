@@ -15,7 +15,10 @@
 #include <stdio.h>
 #include <string.h>
 #include <unistd.h>
-#include <git2.h>
+
+#ifdef USE_VCS_GIT
+    #include <git2.h>
+#endif // USE_VCS_GIT
 
 #include "utils.h"
 
@@ -23,8 +26,10 @@
  * ENVIRONMENT HELPER FUNCTIONS AND WRAPPER
  **/
 
+#ifdef USE_VCS_GIT
 const int INDEX_FLAGS = GIT_STATUS_INDEX_NEW | GIT_STATUS_INDEX_MODIFIED | GIT_STATUS_INDEX_DELETED | GIT_STATUS_INDEX_RENAMED | GIT_STATUS_INDEX_TYPECHANGE;
 const int WT_FLAGS = GIT_STATUS_WT_NEW | GIT_STATUS_WT_MODIFIED | GIT_STATUS_WT_DELETED | GIT_STATUS_WT_RENAMED | GIT_STATUS_WT_TYPECHANGE | GIT_STATUS_WT_TYPECHANGE;
+#endif // USE_VCS_GIT
 
 int last_exit_status = 0;
 
@@ -167,6 +172,7 @@ int al_get_dir_name(char* dest, size_t len, const char* path, int count) {
     return 0;
 }
 
+#ifdef USE_VCS_GIT
 /* open git repository at path if it actually is a git repository */
 int al_git_open_repo(const char* path, git_repository** repo) {
     if (git_repository_open_ext(repo, path, 0, NULL) != 0) {
@@ -229,3 +235,4 @@ int al_git_is_dirty(git_repository* repo) {
     git_status_list_free(status);
     return found_modified;
 }
+#endif // USE_VCS_GIT

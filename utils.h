@@ -13,7 +13,10 @@
 #define _UTILS_H
 
 #include <pwd.h>
-#include <git2.h>
+
+#ifdef USE_VCS_GIT
+    #include <git2.h>
+#endif // USE_VCS_GIT
 
 /**
  * ENVIRONMENT HELPER FUNCTIONS AND WRAPPER
@@ -45,14 +48,16 @@ int al_is_ssh_connection();
 /* check if user is root */
 int al_is_root_session();
 
-/* open git repository at path if it actually is a git repository */
-int al_git_open_repo(const char* path, git_repository** repo);
+#ifdef USE_VCS_GIT
+    /* open git repository at path if it actually is a git repository */
+    int al_git_open_repo(const char* path, git_repository** repo);
 
-/* copy name of current git branch into buf */
-int al_git_get_branch(char* buf, size_t len, git_repository* repo);
+    /* copy name of current git branch into buf */
+    int al_git_get_branch(char* buf, size_t len, git_repository* repo);
 
-/* check if current git repo is clean or dirty */
-int al_git_is_dirty(git_repository* repo);
+    /* check if current git repo is clean or dirty */
+    int al_git_is_dirty(git_repository* repo);
+#endif // USE_VCS_GIT
 
 /* check if last command has failed */
 int al_last_command_failed();

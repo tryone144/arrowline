@@ -239,6 +239,7 @@ int al_segment_cwd(char** prompt, int* prompt_len, int* is_first, int* last_bg) 
     return 0;
 }
 
+#ifdef USE_VCS_GIT
 /* show branch status for git repository */
 int al_segment_git(char** prompt, int* prompt_len, int* is_first, int* last_bg) {
     char text[64];
@@ -281,6 +282,7 @@ int al_segment_git(char** prompt, int* prompt_len, int* is_first, int* last_bg) 
     git_repository_free(repo);
     return 0;
 }
+#endif // USE_VCS_GIT
 
 /* show vcs status if cwd is part of a vcs */
 int al_segment_vcs(char** prompt, int* prompt_len, int* is_first, int* last_bg) {
