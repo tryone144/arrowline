@@ -19,8 +19,9 @@
 
 #define SEGMENT_STATUS 1
 #define SEGMENT_HOST 2
+#define SEGMENT_CWD_PREFIX 8
 #define SEGMENT_CWD 4
-#define SEGMENT_VCS 8
+#define SEGMENT_VCS 32
 
 #define BUF_FORMAT_LEN 48
 #define BUF_PROMPT_LEN 128
@@ -41,6 +42,9 @@
 #define COLOR_FG_STATUS 196     // red
 #define COLOR_BG_STATUS 0       // black
 
+#define COLOR_FG_CWD_PREFIX 250 // light-grey
+#define COLOR_BG_CWD_PREFIX 238 // dark-light-grey
+
 #define COLOR_FG_CWD 250        // light-grey
 #define COLOR_BG_CWD 240        // grey
 #define COLOR_SEP_CWD 245       // light-grey
@@ -54,10 +58,11 @@
 #define OUTPUT_FORMAT OUTPUT_BASH
 
 /* segments to use */
-static const int NUM_SEGMENTS = 4;
+static const int NUM_SEGMENTS = 5;
 static const unsigned int USE_SEGMENTS[] = {
     SEGMENT_STATUS,
     SEGMENT_HOST,
+    SEGMENT_CWD_PREFIX,
     SEGMENT_CWD,
     SEGMENT_VCS
 };

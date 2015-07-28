@@ -25,6 +25,9 @@ void al_segment_end(char** dest, unsigned int* maxlen, int bg, int orientation);
 /* show current working dir */
 int al_segment_cwd(char** prompt, unsigned int* prompt_len, int* is_first, int* last_bg, int orientation);
 
+/* show current working dir prefix */
+int al_segment_cwd_prefix(char** prompt, unsigned int* prompt_len, int* is_first, int* last_bg, int orientation);
+
 /* show username and hostname with colorcodes for ROOT or SSH */
 int al_segment_host(char** prompt, unsigned int* prompt_len, int* is_first, int* last_bg, int orientation);
 
