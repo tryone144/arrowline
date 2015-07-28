@@ -299,7 +299,7 @@ int al_segment_cwd_prefix(char** prompt, unsigned int* prompt_len, int* is_first
     }
 
     // add segment to prompt buffer
-    snprintf(text, 64, " %s ", prefix);
+    snprintf(text, 16, " %s ", prefix);
     al_gen_segment(prompt, prompt_len, COLOR_FG_CWD_PREFIX, COLOR_BG_CWD_PREFIX, FNT_BOLD, text, is_first, last_bg, orientation);
 
     return 0;

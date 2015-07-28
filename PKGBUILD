@@ -2,13 +2,13 @@
 
 pkgname=arrowline-git
 _pkgname=arrowline
-pkgver=v0.6.2
+pkgver=v0.6.4
 pkgrel=1
 pkgdesc="Lightweight shell promptline generator written in pure C"
 arch=('i686' 'x86_64')
 url="https://github.com/tryone144/arrowline"
 license=('MIT')
-depends=('libgit2')
+depends=('libgit2' 'git')
 makedepends=('git')
 source=('git://github.com/tryone144/arrowline.git')
 md5sums=('SKIP')
