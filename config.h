@@ -62,7 +62,7 @@ static const unsigned int USE_SEGMENTS[] = {
     SEGMENT_STATUS,
     SEGMENT_HOST,
     SEGMENT_CWD,
-//    SEGMENT_VCS
+    SEGMENT_VCS
 };
 
 #endif // _CONFIG_H

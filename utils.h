@@ -56,7 +56,7 @@ int al_is_root_session();
     int al_git_get_branch(char* buf, size_t len, git_repository* repo);
 
     /* check if current git repo is clean or dirty */
-    int al_git_is_dirty(git_repository* repo);
+    int al_git_is_dirty();
 #endif // USE_VCS_GIT
 
 /* check if last command has failed */

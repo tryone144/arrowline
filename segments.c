@@ -267,7 +267,7 @@ int al_segment_git(char** prompt, unsigned int* prompt_len, int* is_first, int* 
     }
 
     // change color and icon on branch state
-    if (al_git_is_dirty(repo)) {
+    if (al_git_is_dirty()) {
         color = COLOR_BG_VCS_DIRTY;
         strncpy(icon, PLUSMINUS, 4);
     } else {
