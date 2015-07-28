@@ -208,38 +208,30 @@ int al_git_get_branch(char* buf, size_t len, git_repository* repo) {
     return 0;
 }
 
-/* check if current git repo is clean or dirty */
-int al_git_is_dirty(git_repository* repo) {
-    const git_status_entry* entry;
-    size_t i, count;
+/* check if current git repo is clean or dirty 
+ * HACK: INVOKE 'git status' and parse output */
+int al_git_is_dirty() {
+    FILE *cmd;
+    int modified = 0;
+    char modified_list[10] = { 0 };
 
-    int found_modified = 0;
-    
-    git_status_list* status = NULL;
-    git_status_options opts;
-    git_status_init_options(&opts, GIT_STATUS_OPTIONS_VERSION);
-    opts.flags |= GIT_STATUS_OPT_EXCLUDE_SUBMODULES;
-    opts.flags |= GIT_STATUS_OPT_INCLUDE_UNTRACKED;
+    cmd = popen("git status -s --ignore-submodules --porcelain", "r");
 
-    if (git_status_list_new(&status, repo, &opts) != 0) {
+    if (cmd == NULL) {
         return -1; // error
     }
 
-    count = git_status_list_entrycount(status);
-    for (i = 0; i < count; i++) {
-        entry = git_status_byindex(status, i);
-
-        if (entry->status == GIT_STATUS_CURRENT) {
-            continue;
-        }
-
-        if ((entry->status & (INDEX_FLAGS) || WT_FLAGS)) {
-            found_modified = 1;
+    while (fgets(modified_list, 10, cmd) != NULL) {
+        if (sizeof(modified_list) != 0) {
+            modified = 1; // found modification
             break;
         }
     }
 
-    git_status_list_free(status);
-    return found_modified;
+    if (pclose(cmd) != 0) {
+        return -1; // error
+    }
+
+    return modified;
 }
 #endif // USE_VCS_GIT

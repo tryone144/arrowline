@@ -29,7 +29,7 @@ Systemwide installation (as root) into `/usr/local/bin`:
 
     make install
 
-If you install by hand make sure that `libgit2` is installed for git support.
+If you install by hand make sure that plain `git` `libgit2` is installed for git support.
 
 
 Configuration
@@ -46,7 +46,7 @@ All configuration takes place in `config.h`.
     - `VCS`: display branch and status if current working dir is inside a version controlled directory
         
         - currently only supports git    
-        - please note that status fetching may be slow in large projects
+        - uses commandline `git status` for faster status fetching
 
 
 Using arrowline
@@ -68,6 +68,7 @@ TODO
 
 - zsh usage information
 - add new segments
+- better status fetching for git
 - support for status bars (i3bar, dzen2, lemonbar)
 
 
