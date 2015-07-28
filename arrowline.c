@@ -55,6 +55,10 @@ int main(int argc, char** argv) {
                 // USERNAME @ HOSTNAME
                 retval = al_segment_host(&prompt, &prompt_len, &is_first, &sep_bg, orientation);
                 break;
+            case SEGMENT_CWD_PREFIX:
+                // CURRENT WORKING DIRECTORY PREFIX
+                retval = al_segment_cwd_prefix(&prompt, &prompt_len, &is_first, &sep_bg, orientation);
+                break;
             case SEGMENT_CWD:
                 // CURRENT WORKING DIRECTORY
                 retval = al_segment_cwd(&prompt, &prompt_len, &is_first, &sep_bg, orientation);

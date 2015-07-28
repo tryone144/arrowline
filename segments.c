@@ -245,20 +245,6 @@ int al_segment_cwd(char** prompt, unsigned int* prompt_len, int* is_first, int* 
         al_get_dir_name(dirs[i], 64, base, i);
     }
 
-    // copy first path element into dirs buffer
-    for (int i = 0; i <= CWD_LEN; i++) {
-        if ((strlen(dirs[i]) == 0) || (i == CWD_LEN)) {
-            if (al_get_dir_count(base) > CWD_LEN) {
-                strcpy(dirs[i], THREE_DOTS); // deep in hirarchy
-            } else if (al_string_startswith(cwd, home)) {
-                strcpy(dirs[i], "~"); // home directory
-            } else {
-                strcpy(dirs[i], "/"); // everywhere else
-            }
-            break;
-        }
-    }
-
     char text[66];
     int style;
     int first_path = 1;
@@ -278,6 +264,43 @@ int al_segment_cwd(char** prompt, unsigned int* prompt_len, int* is_first, int* 
             }
         }
     }
+
+    return 0;
+}
+
+/* show current working dir prefix */
+int al_segment_cwd_prefix(char** prompt, unsigned int* prompt_len, int* is_first, int* last_bg, int orientation) {
+    char text[16];
+
+    char prefix[16];
+    char home[64];
+    char cwd[512];
+    char *base = cwd;
+
+    if (al_get_home(home, 64) != 0) {
+        return -1;
+    }
+    if (al_get_cwd(cwd, 512) != 0) {
+        return -1;
+    }
+
+    // check if in home directory
+    if (al_string_startswith(cwd, home)) {
+        base = cwd+strlen(home);
+    }
+
+    // copy first path element into dirs buffer
+    if (al_get_dir_count(base) > CWD_LEN) {
+        strcpy(prefix, THREE_DOTS); // deep in hirarchy
+    } else if (al_string_startswith(cwd, home)) {
+        strcpy(prefix, "~"); // home directory
+    } else {
+        strcpy(prefix, "/"); // everywhere else
+    }
+
+    // add segment to prompt buffer
+    snprintf(text, 64, " %s ", prefix);
+    al_gen_segment(prompt, prompt_len, COLOR_FG_CWD_PREFIX, COLOR_BG_CWD_PREFIX, FNT_BOLD, text, is_first, last_bg, orientation);
 
     return 0;
 }
