@@ -80,6 +80,8 @@ int main(int argc, char** argv) {
 
     // END PROMPT / RESET SEPARATOR
     al_segment_end(&prompt, &prompt_len, sep_bg, orientation);
+    al_resize_char_buffer(&prompt, " ", &prompt_len, 2);
+    al_string_cat(prompt, " ", prompt_len);
 
     // output prompt buffer to stdout and exit
     fprintf(stdout, prompt);
