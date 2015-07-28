@@ -25,13 +25,16 @@ LDFLAGS := $(base_LIBS) $(pkgs_LIBS)
 
 # Executable
 EXE_PROMPT = arrowline
+EXE_BAR = arrowbar
 
 # Sources
 SRCS = segments.c utils.c
 SRCS_PROMPT = arrowline.c
+#SRCS_BAR = arrowbar.c
 
 OBJS = $(SRCS:.c=.o)
 OBJS_PROMPT = $(SRCS_PROMPT:.c=.o)
+#OBJS_BAR = $(SRCS_BAR:.c=.o)
 
 PREFIX = /usr/local
 

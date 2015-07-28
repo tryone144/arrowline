@@ -20,10 +20,7 @@
 #define SEGMENT_STATUS 1
 #define SEGMENT_HOST 2
 #define SEGMENT_CWD 4
-
-#ifdef USE_VCS_GIT
-    #define SEGMENT_VCS 8
-#endif // USE_VCS_GIT
+#define SEGMENT_VCS 8
 
 #define BUF_FORMAT_LEN 48
 #define BUF_PROMPT_LEN 128
@@ -62,7 +59,7 @@ static const unsigned int USE_SEGMENTS[] = {
     SEGMENT_STATUS,
     SEGMENT_HOST,
     SEGMENT_CWD,
-//    SEGMENT_VCS
+    SEGMENT_VCS
 };
 
 #endif // _CONFIG_H

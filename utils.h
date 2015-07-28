@@ -68,4 +68,7 @@ void al_resize_char_buffer(char** dest, const char* buf, unsigned int* destlen, 
 /* check if str starts with pre */
 int al_string_startswith(const char* str, const char* pre);
 
+/* safety wrapper arround strncat */
+void al_string_cat(char* dst, const char* str, const int maxlen);
+
 #endif // _UTILS_H
