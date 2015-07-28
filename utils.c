@@ -124,6 +124,12 @@ int al_string_startswith(const char* str, const char* pre) {
     return strncmp(str, pre, len) == 0;
 }
 
+/* safety wrapper arround strncat */
+void al_string_cat(char* dst, const char* str, const int maxlen) {
+    strncat(dst, str, maxlen - strlen(dst));
+    dst[maxlen-1] = '\0';
+}
+
 /* return directory level of path */
 int al_get_dir_count(const char* path) {
     int c = 1;

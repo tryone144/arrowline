@@ -35,6 +35,7 @@ int main(int argc, char** argv) {
         return EXIT_FAILURE;
     }
 
+    const int orientation = ORIENTATION_RIGHT;
     int sep_bg = 0;
     int is_first = 1;
 
@@ -48,22 +49,22 @@ int main(int argc, char** argv) {
         switch (USE_SEGMENTS[s]) {
             case SEGMENT_STATUS:
                 // EXIT STATUS
-                retval = al_segment_status(&prompt, &prompt_len, &is_first, &sep_bg);
+                retval = al_segment_status(&prompt, &prompt_len, &is_first, &sep_bg, orientation);
                 break;
             case SEGMENT_HOST:
                 // USERNAME @ HOSTNAME
-                retval = al_segment_host(&prompt, &prompt_len, &is_first, &sep_bg);
+                retval = al_segment_host(&prompt, &prompt_len, &is_first, &sep_bg, orientation);
                 break;
             case SEGMENT_CWD:
                 // CURRENT WORKING DIRECTORY
-                retval = al_segment_cwd(&prompt, &prompt_len, &is_first, &sep_bg);
+                retval = al_segment_cwd(&prompt, &prompt_len, &is_first, &sep_bg, orientation);
                 break;
             case SEGMENT_VCS:
                 // VCS BRANCH STATUS (GIT)
-                retval = al_segment_vcs(&prompt, &prompt_len, &is_first, &sep_bg);
+                retval = al_segment_vcs(&prompt, &prompt_len, &is_first, &sep_bg, orientation);
                 break;
             default:
-                perror("ERROR: can't generate unknown segment");
+                perror("ERROR: can't generate unknown/invalid segment");
                 exit(EXIT_FAILURE);
         }
         if (retval != 0) {
@@ -78,7 +79,7 @@ int main(int argc, char** argv) {
 #endif // USE_VCS_GIT
 
     // END PROMPT / RESET SEPARATOR
-    al_separator_end(&prompt, &prompt_len, sep_bg);
+    al_segment_end(&prompt, &prompt_len, sep_bg, orientation);
 
     // output prompt buffer to stdout and exit
     fprintf(stdout, prompt);
