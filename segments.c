@@ -293,6 +293,7 @@ int al_segment_git(char** prompt, unsigned int* prompt_len, int* is_first, int* 
     int color = 0;
     
     git_repository* repo = NULL;
+    int repo_dirty = 0;
     
     if (al_get_cwd(cwd, 512) != 0) {
         return -1;
@@ -308,9 +309,14 @@ int al_segment_git(char** prompt, unsigned int* prompt_len, int* is_first, int* 
         git_repository_free(repo);
         return -1;
     }
+    git_repository_free(repo);
 
     // change color and icon on branch state
-    if (al_git_is_dirty(repo)) {
+    if ((repo_dirty = al_git_is_dirty()) == -1) {
+            return -1;
+    }
+
+    if (repo_dirty) {
         color = COLOR_BG_VCS_DIRTY;
         strncpy(icon, PLUSMINUS, 4);
     } else {
@@ -322,7 +328,6 @@ int al_segment_git(char** prompt, unsigned int* prompt_len, int* is_first, int* 
     snprintf(text, 64, " %s %s ", icon, branch);
     al_gen_segment(prompt, prompt_len, COLOR_FG_VCS, color, FNT_BOLD, text, is_first, last_bg, orientation);
 
-    git_repository_free(repo);
     return 0;
 }
 #endif // USE_VCS_GIT
