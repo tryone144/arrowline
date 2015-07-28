@@ -3,7 +3,7 @@
  * powerline-like shell prompt generator
  *
  * file: segments.c
- * v0.6.3 / 2015.07.16
+ * v0.6.4 / 2015.07.18
  *
  * (c) 2015 Bernd Busse
  * The MIT License (MIT)
@@ -222,7 +222,7 @@ int al_segment_status(char** prompt, unsigned int* prompt_len, int* is_first, in
 
 /* show current working dir */
 int al_segment_cwd(char** prompt, unsigned int* prompt_len, int* is_first, int* last_bg, int orientation) {
-    char dirs[CWD_LEN + 1][64];
+    char dirs[CWD_LEN][64];
 
     char home[64];
     char cwd[512];
@@ -241,7 +241,7 @@ int al_segment_cwd(char** prompt, unsigned int* prompt_len, int* is_first, int* 
     }
 
     // copy directory names into dirs buffer
-    for (int i = 0; i <= CWD_LEN; i++) {
+    for (int i = 0; i < CWD_LEN; i++) {
         al_get_dir_name(dirs[i], 64, base, i);
     }
 
@@ -249,7 +249,7 @@ int al_segment_cwd(char** prompt, unsigned int* prompt_len, int* is_first, int* 
     int style;
     int first_path = 1;
 
-    for (int i = CWD_LEN; i >= 0; i--) {
+    for (int i = CWD_LEN - 1; i >= 0; i--) {
         if (strlen(dirs[i]) != 0) {
             // render path
             snprintf(text, 66, " %s ", dirs[i]);

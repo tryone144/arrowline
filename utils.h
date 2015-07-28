@@ -2,8 +2,8 @@
  * ARROWLINE
  * powerline-like shell prompt generator
  *
- * file: utils.c
- * v0.6.2 / 2015.07.07
+ * file: utils.h
+ * v0.6.4 / 2015.07.28
  *
  * (c) 2015 Bernd Busse
  * The MIT License (MIT)
