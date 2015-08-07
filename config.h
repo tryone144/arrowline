@@ -28,7 +28,16 @@
 #define BUF_FORMAT_LEN 48
 #define BUF_PROMPT_LEN 128
 
+
+/**
+ * GENERAL APPEARANCE
+ **/
+
 /* number of parent dirs to show */
 #define CWD_LEN 3
+
+/* date and time formatting */
+#define TIME_FMT "%H:%M:%S"
+#define DATE_FMT "%a, %d. %b"
 
 #endif // _CONFIG_H

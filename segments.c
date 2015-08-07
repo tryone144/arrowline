@@ -25,19 +25,25 @@
 
 /* show date and time */
 int al_segment_datetime(char** dest, unsigned int* maxlen, int* is_first, int* last_bg, int position) {
-    char text[64];
+    char text[2][64];
     int color_fg = 0;
     int color_bg = 2;
 
     char date[32];
     char time[32];
 
-    //al_get_date(date, 32);
-    //al_get_time(time, 32);
+    if (al_get_datetime(date, 32, DATE_FMT) != 0) {
+        return -1; // error
+    }
+    if (al_get_datetime(time, 32, TIME_FMT) != 0) {
+        return -1; // error
+    }
 
     // add segment to prompt buffer
-    snprintf(text, 64, " %s-%s ", date, time);
-    al_gen_segment(dest, maxlen, color_fg, color_bg, FNT_NORMAL, text, is_first, last_bg, position);
+    snprintf(text[0], 64, " %s ", date);
+    snprintf(text[1], 64, " %s ", time);
+    al_gen_segment(dest, maxlen, color_fg, color_bg, FNT_NORMAL, text[0], is_first, last_bg, position);
+    al_gen_subsegment(dest, maxlen, color_fg, color_bg, COLOR_SEP_CWD, FNT_NORMAL, text[1], position);
 
     return 0;
 }

@@ -95,9 +95,8 @@ void al_segment_start(char* dest, unsigned int maxlen, int bg, int position) {
     if (position != POSITION_LEFT) {
         al_ansi_escape_bg_reset(buf, BUF_FORMAT_LEN, bg);
         al_string_cat(buf, SEPARATOR_SEGMENT_LEFT, BUF_FORMAT_LEN);
+        al_string_cat(dest, buf, maxlen);
     }
-    
-    al_string_cat(dest, buf, maxlen);
 }
 
 /* generate end separator with color reset */

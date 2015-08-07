@@ -14,6 +14,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
+#include <time.h>
 #include <unistd.h>
 
 #ifdef USE_VCS_GIT
@@ -32,6 +33,20 @@ static const int WT_FLAGS = GIT_STATUS_WT_NEW | GIT_STATUS_WT_MODIFIED | GIT_STA
 #endif // USE_VCS_GIT
 
 int last_exit_status = 0;
+
+/* copy date / time according to format string fmt into buf */
+int al_get_datetime(char* buf, size_t len, const char* fmt) {
+    time_t t = time(NULL);
+    struct tm* timeinfo = localtime(&t);
+    if (timeinfo == NULL) {
+        return -1; // error
+    }
+    if (strftime(buf, len, fmt, timeinfo) == 0) {
+        return -1; // possible error
+    }
+    buf[len-1] = '\0';
+    return 0;
+}
 
 /* copy username from environment into buf */
 int al_get_username(char* buf, size_t len) {

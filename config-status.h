@@ -57,15 +57,26 @@
 #define USE_POWERLINE_SYMBOLS
 #define STATUS_OUTPUT_FORMAT OUTPUT_LEMONBAR
 
-/* segments to use */
-static const segment_generator STATUS_SEGMENTS[] = {
-    al_segment_datetime,
+/* segments to use (NULL-terminated!) */
+static const segment_generator STATUS_SEGMENTS_LEFT[] = {
     al_segment_status,
     al_segment_host,
     al_segment_cwd_prefix,
     al_segment_cwd,
-    al_segment_vcs
+    NULL
 };
-static const int NUM_STATUS_SEGMENTS = sizeof(STATUS_SEGMENTS) / sizeof(segment_generator);
+static const int NUM_STATUS_SEGMENTS_LEFT = sizeof(STATUS_SEGMENTS_LEFT) / sizeof(segment_generator) - 1;
+
+static const segment_generator STATUS_SEGMENTS_RIGHT[] = {
+    al_segment_datetime,
+    NULL
+};
+static const int NUM_STATUS_SEGMENTS_RIGHT = sizeof(STATUS_SEGMENTS_RIGHT) / sizeof(segment_generator) - 1;
+
+static const segment_generator STATUS_SEGMENTS_CENTER[] = {
+    NULL
+};
+static const int NUM_STATUS_SEGMENTS_CENTER = sizeof(STATUS_SEGMENTS_CENTER) / sizeof(segment_generator) - 1;
+
 
 #endif // _CONFIG_H

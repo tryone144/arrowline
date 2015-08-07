@@ -57,14 +57,21 @@
 #define USE_POWERLINE_SYMBOLS
 #define PROMPT_OUTPUT_FORMAT OUTPUT_BASH
 
-/* segments to use */
-static const segment_generator PROMPT_SEGMENTS[] = {
+/* segments to use (NULL-terminated!) */
+static const segment_generator PROMPT_SEGMENTS_LEFT[] = {
     al_segment_status,
     al_segment_host,
     al_segment_cwd_prefix,
     al_segment_cwd,
-    al_segment_vcs
+    al_segment_vcs,
+    NULL
 };
-static const int NUM_PROMPT_SEGMENTS = sizeof(PROMPT_SEGMENTS) / sizeof(segment_generator);
+static const int NUM_PROMPT_SEGMENTS_LEFT = sizeof(PROMPT_SEGMENTS_LEFT) / sizeof(segment_generator) - 1;
+
+static const segment_generator PROMPT_SEGMENTS_RIGHT[] = {
+//    al_segment_status
+    NULL
+};
+static const int NUM_PROMPT_SEGMENTS_RIGHT = sizeof(PROMPT_SEGMENTS_RIGHT) / sizeof(segment_generator) - 1;
 
 #endif // _CONFIG_PROMPT_H

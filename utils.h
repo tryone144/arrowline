@@ -27,6 +27,9 @@ extern int last_exit_status;
 /* copy path of current working directory into buf */
 int al_get_cwd(char* buf, size_t len);
 
+/* copy date / time according to format string fmt into buf */
+int al_get_datetime(char* buf, size_t len, const char* fmt);
+
 /* return directory level of path */
 int al_get_dir_count(const char* path);
 

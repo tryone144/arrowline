@@ -23,9 +23,15 @@
 
 /* output formatted prompt */
 int main(int argc, char** argv) {
+    int position = POSITION_LEFT;
+    
     // read arguments
     if (argc > 1) { // first argument is exit status
         last_exit_status = atoi(argv[1]);
+
+        if (argc > 2) { // second argument is position / orientation
+            position = atoi(argv[2]) == 0 ? POSITION_LEFT : POSITION_RIGHT;
+        }
     }
 
     char* prompt; // prompt buffer
@@ -35,31 +41,49 @@ int main(int argc, char** argv) {
         return EXIT_FAILURE;
     }
 
-    const int position = POSITION_LEFT;
     int sep_bg = 0;
     int is_first = 1;
+    segment_generator gen;
 
 #ifdef USE_VCS_GIT
     // init libgit2
     git_libgit2_init();
 #endif // USE_VCS_GIT
-
-    for (int s = 0; s < NUM_PROMPT_SEGMENTS; s++) {
-        if (PROMPT_SEGMENTS[s](&prompt, &prompt_len, &is_first, &sep_bg, position) != 0) {
-            perror("ERROR: can't generate segment");
-            exit(EXIT_FAILURE);
+    
+    if (position == POSITION_LEFT) {
+        for (int s = 0; s < NUM_PROMPT_SEGMENTS_LEFT; s++) {
+            if ((gen = PROMPT_SEGMENTS_LEFT[s]) == NULL) {
+                break;
+            }
+            if (gen(&prompt, &prompt_len, &is_first, &sep_bg, POSITION_LEFT) != 0) {
+                perror("ERROR: can't generate segment");
+                exit(EXIT_FAILURE);
+            }
         }
+
+        // end prompt and add trailing space
+        al_segment_end(&prompt, &prompt_len, sep_bg, POSITION_LEFT);
+        al_resize_char_buffer(&prompt, " ", &prompt_len, 2);
+        al_string_cat(prompt, " ", prompt_len);
+    } else {
+        for (int s = 0; s < NUM_PROMPT_SEGMENTS_RIGHT; s++) {
+            if ((gen = PROMPT_SEGMENTS_RIGHT[s]) == NULL) {
+                break;
+            }
+            if (gen(&prompt, &prompt_len, &is_first, &sep_bg, POSITION_RIGHT) != 0) {
+                perror("ERROR: can't generate segment");
+                exit(EXIT_FAILURE);
+            }
+        }
+
+        // end prompt without spaces
+        al_segment_end(&prompt, &prompt_len, sep_bg, POSITION_RIGHT);
     }
 
 #ifdef USE_VCS_GIT
     // shutdown libgit2
     git_libgit2_shutdown();
 #endif // USE_VCS_GIT
-
-    // END PROMPT / RESET SEPARATOR
-    al_segment_end(&prompt, &prompt_len, sep_bg, position);
-    al_resize_char_buffer(&prompt, " ", &prompt_len, 2);
-    al_string_cat(prompt, " ", prompt_len);
 
     // output prompt buffer to stdout and exit
     fprintf(stdout, prompt);
