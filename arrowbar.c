@@ -14,8 +14,8 @@
 #include <string.h>
 
 #include "config-status.h"
+#include "renderer.h"
 #include "utils.h"
-#include "segments.h"
 
 /* output formatted statusline */
 int main() {

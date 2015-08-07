@@ -28,7 +28,7 @@ EXE_PROMPT = arrowline
 EXE_BAR = arrowbar
 
 # Sources
-SRCS = segments.c utils.c
+SRCS = renderer.c segments.c utils.c
 SRCS_PROMPT = arrowline.c
 SRCS_BAR = arrowbar.c
 

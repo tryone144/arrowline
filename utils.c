@@ -3,7 +3,7 @@
  * powerline-like shell prompt generator
  *
  * file: utils.c
- * v0.6.4 / 2015.07.28
+ * v0.7 / 2015.08.07
  *
  * (c) 2015 Bernd Busse
  * The MIT License (MIT)
@@ -125,7 +125,7 @@ int al_string_startswith(const char* str, const char* pre) {
 }
 
 /* safety wrapper arround strncat */
-void al_string_cat(char* dst, const char* str, const int maxlen) {
+void al_string_cat(char* dst, const char* str, const unsigned int maxlen) {
     strncat(dst, str, maxlen - strlen(dst));
     dst[maxlen-1] = '\0';
 }

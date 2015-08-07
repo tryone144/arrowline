@@ -3,7 +3,7 @@
  * powerline-like shell prompt generator
  *
  * file: config.h
- * v0.6.4 / 2015.07.28
+ * v0.7 / 2015.08.07
  *
  * (c) 2015 Bernd Busse
  * The MIT License (MIT)

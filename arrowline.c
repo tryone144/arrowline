@@ -3,7 +3,7 @@
  * powerline-like shell prompt generator
  *
  * file: arrowline.c
- * v0.6.4 / 2015.07.28
+ * v0.7 / 2015.08.07
  *
  * (c) 2015 Bernd Busse
  * The MIT License (MIT)
@@ -18,8 +18,8 @@
 #endif // USE_VCS_GIT
 
 #include "config-prompt.h"
+#include "renderer.h"
 #include "utils.h"
-#include "segments.h"
 
 /* output formatted prompt */
 int main(int argc, char** argv) {

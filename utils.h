@@ -3,7 +3,7 @@
  * powerline-like shell prompt generator
  *
  * file: utils.h
- * v0.6.4 / 2015.07.28
+ * v0.7 / 2015.08.07
  *
  * (c) 2015 Bernd Busse
  * The MIT License (MIT)
@@ -69,6 +69,6 @@ void al_resize_char_buffer(char** dest, const char* buf, unsigned int* destlen, 
 int al_string_startswith(const char* str, const char* pre);
 
 /* safety wrapper arround strncat */
-void al_string_cat(char* dst, const char* str, const int maxlen);
+void al_string_cat(char* dst, const char* str, const unsigned int maxlen);
 
 #endif // _UTILS_H
