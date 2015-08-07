@@ -2,7 +2,7 @@
 # (c) 2015 Bernd Busse
 
 NAME = arrowline
-VERSION = 0.6.3
+VERSION = 0.7
 
 # C Compiler
 CC := $(CC) -std=gnu11
@@ -30,25 +30,29 @@ EXE_BAR = arrowbar
 # Sources
 SRCS = segments.c utils.c
 SRCS_PROMPT = arrowline.c
-#SRCS_BAR = arrowbar.c
+SRCS_BAR = arrowbar.c
 
 OBJS = $(SRCS:.c=.o)
 OBJS_PROMPT = $(SRCS_PROMPT:.c=.o)
-#OBJS_BAR = $(SRCS_BAR:.c=.o)
+OBJS_BAR = $(SRCS_BAR:.c=.o)
 
 PREFIX = /usr/local
 
-all: $(EXE_PROMPT)
+all: $(EXE_PROMPT) $(EXE_BAR)
 
 $(EXE_PROMPT): $(OBJS) $(OBJS_PROMPT)
 	$(CC) $(OBJS) $(OBJS_PROMPT) $(LDFLAGS) -o $@
 
-.o: $(SRCS) $(SRCS_PROMPT)
+$(EXE_BAR): $(OBJS) $(OBJS_BAR)
+	$(CC) $(OBJS) $(OBJS_BAR) $(LDFLAGS) -o $@
+
+.o: $(SRCS) $(SRCS_PROMPT) $(SRCS_BAR)
 	$(CC) $(CFLAGS) $< -o $@
 
 .PHONY: clean
 clean:
-	rm -f *.o && rm -f $(EXE_PROMPT)
+	rm -f *.o && rm -f $(EXE_PROMPT) && rm -f $(EXE_BAR)
 
-install: $(EXE_PROMPT)
+install: $(EXE_PROMPT) $(EXE_BAR)
 	install -Dm755 $(EXE_PROMPT) $(PREFIX)/bin/$(EXE_PROMPT)
+	install -Dm755 $(EXE_BAR) $(PREFIX)/bin/$(EXE_BAR)

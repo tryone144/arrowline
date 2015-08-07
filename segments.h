@@ -12,8 +12,9 @@
 #ifndef _SEGMENTS_h
 #define _SEGMENTS_H
 
-#define ORIENTATION_RIGHT 0
-#define ORIENTATION_LEFT 1
+#define POSITION_LEFT 0     // points right
+#define POSITION_RIGHT 1    // points left
+#define POSITION_CENTER 2   // points left and right
 
 /* signature of a segment generation function */
 typedef int (*segment_generator)(char** dest, unsigned int* prompt_len, int* is_first, int* last_bg, int orientation);

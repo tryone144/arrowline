@@ -17,7 +17,7 @@
     #include <git2.h>
 #endif // USE_VCS_GIT
 
-#include "config.h"
+#include "config-prompt.h"
 #include "utils.h"
 #include "segments.h"
 
@@ -35,7 +35,7 @@ int main(int argc, char** argv) {
         return EXIT_FAILURE;
     }
 
-    const int orientation = ORIENTATION_RIGHT;
+    const int position = POSITION_LEFT;
     int sep_bg = 0;
     int is_first = 1;
 
@@ -45,7 +45,7 @@ int main(int argc, char** argv) {
 #endif // USE_VCS_GIT
 
     for (int s = 0; s < NUM_PROMPT_SEGMENTS; s++) {
-        if (PROMPT_SEGMENTS[s](&prompt, &prompt_len, &is_first, &sep_bg, orientation) != 0) {
+        if (PROMPT_SEGMENTS[s](&prompt, &prompt_len, &is_first, &sep_bg, position) != 0) {
             perror("ERROR: can't generate segment");
             exit(EXIT_FAILURE);
         }
@@ -57,7 +57,7 @@ int main(int argc, char** argv) {
 #endif // USE_VCS_GIT
 
     // END PROMPT / RESET SEPARATOR
-    al_segment_end(&prompt, &prompt_len, sep_bg, orientation);
+    al_segment_end(&prompt, &prompt_len, sep_bg, position);
     al_resize_char_buffer(&prompt, " ", &prompt_len, 2);
     al_string_cat(prompt, " ", prompt_len);
 
