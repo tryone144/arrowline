@@ -24,9 +24,10 @@ if [[ -n ${1} ]]; then
             ;;
         *) ;;
     esac
+    shift 1
 fi
 
 BASE_DIR="$( echo "$( cd "$( dirname ${BASH_SOURCE[0]} )" && pwd )" )"
 
-echo -e "$( ${BASE_DIR}/${EXEC} | sed -re ${CMDS[0]} -e ${CMDS[1]} -e ${CMDS[2]} -e ${CMDS[3]} )"
+echo -e "$( ${BASE_DIR}/${EXEC} ${@} | sed -re ${CMDS[0]} -e ${CMDS[1]} -e ${CMDS[2]} -e ${CMDS[3]} )"
 
