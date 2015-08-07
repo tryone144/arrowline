@@ -44,9 +44,9 @@
 /* escape ANSI color codes for shell prompt */
 void al_ansi_escape_color(char* dest, int maxlen, int fg, int bg, int style) {
     char buf[BUF_FORMAT_LEN] = { 0 };
-#if OUTPUT_FORMAT == OUTPUT_BASH
+#if PROMPT_OUTPUT_FORMAT == OUTPUT_BASH
     snprintf(buf, BUF_FORMAT_LEN, "\\[\\e[0;38;5;%d;48;5;%d;%dm\\]", fg, bg, style);
-#elif OUTPUT_FORMAT == OUTPUT_ZSH
+#elif PROMPT_OUTPUT_FORMAT == OUTPUT_ZSH
     snprintf(buf, BUF_FORMAT_LEN, "%%{\\e[0;38;5;%d;48;5;%d;%dm%%}", fg, bg, style);
 #else // PLAIN
     snprintf(buf, BUF_FORMAT_LEN, "\\e[0;38;5;%d;48;5;%d;%dm", fg, bg, style);
@@ -58,9 +58,9 @@ void al_ansi_escape_color(char* dest, int maxlen, int fg, int bg, int style) {
 /* escape ANSI fg color and reset bg color for shell prompt (end segment) */
 void al_ansi_escape_bg_reset(char* dest, int maxlen, int bg) {
     char buf[BUF_FORMAT_LEN] = { 0 };
-#if OUTPUT_FORMAT == OUTPUT_BASH
+#if PROMPT_OUTPUT_FORMAT == OUTPUT_BASH
     snprintf(buf, BUF_FORMAT_LEN, "\\[\\e[0;38;5;%d;49;22m\\]", bg);
-#elif OUTPUT_FORMAT == OUTPUT_ZSH
+#elif PROMPT_OUTPUT_FORMAT == OUTPUT_ZSH
     snprintf(buf, BUF_FORMAT_LEN, "%%{\\e[0;38;5;%d;49;22m%%}", bg);
 #else // PLAIN
     snprintf(buf, BUF_FORMAT_LEN, "\\e[0;38;5;%d;49;22m", bg);
@@ -72,9 +72,9 @@ void al_ansi_escape_bg_reset(char* dest, int maxlen, int bg) {
 /* reset ANSI color codes for shell prompt */
 void al_ansi_escape_reset(char* dest, int maxlen) {
     char buf[BUF_FORMAT_LEN] = { 0 };
-#if OUTPUT_FORMAT == OUTPUT_BASH
+#if PROMPT_OUTPUT_FORMAT == OUTPUT_BASH
     snprintf(buf, BUF_FORMAT_LEN, "\\[\\e[0m\\]");
-#elif OUTPUT_FORMAT == OUTPUT_ZSH
+#elif PROMPT_OUTPUT_FORMAT == OUTPUT_ZSH
     snprintf(buf, BUF_FORMAT_LEN, "%%{\\e[0m%%}");
 #else // PLAIN
     snprintf(buf, BUF_FORMAT_LEN, "\\e[0m");
@@ -181,7 +181,8 @@ void al_gen_subsegment(char** dest, unsigned int* maxlen, int cur_fg, int cur_bg
 /* show username and hostname with colorcodes for ROOT or SSH */
 int al_segment_host(char** prompt, unsigned int* prompt_len, int* is_first, int* last_bg, int orientation) {
     char text[64];
-    int color = COLOR_BG_HOST_USER;
+    int color_fg = COLOR_FG_HOST_USER;
+    int color_bg = COLOR_BG_HOST_USER;
 
     char username[32];
     char hostname[32];
@@ -195,14 +196,16 @@ int al_segment_host(char** prompt, unsigned int* prompt_len, int* is_first, int*
 
     // change color on ssh or root sessions
     if (al_is_ssh_connection()) {
-        color = COLOR_BG_HOST_SSH;
+        color_fg = COLOR_FG_HOST_SSH;
+        color_bg = COLOR_BG_HOST_SSH;
     } else if (al_is_root_session()) {
-        color = COLOR_BG_HOST_ROOT;
+        color_fg = COLOR_FG_HOST_ROOT;
+        color_bg = COLOR_BG_HOST_ROOT;
     }
 
     // add segment to prompt buffer
     snprintf(text, 64, " %s@%s ", username, hostname);
-    al_gen_segment(prompt, prompt_len, COLOR_FG_HOST, color, FNT_BOLD, text, is_first, last_bg, orientation);
+    al_gen_segment(prompt, prompt_len, color_fg, color_bg, FNT_BOLD, text, is_first, last_bg, orientation);
 
     return 0;
 }
@@ -313,7 +316,8 @@ int al_segment_git(char** prompt, unsigned int* prompt_len, int* is_first, int* 
     char branch[32];
 
     char icon[4] = {0};
-    int color = 0;
+    int color_fg = 0;
+    int color_bg = 0;
     
     git_repository* repo = NULL;
     int repo_dirty = 0;
@@ -340,16 +344,18 @@ int al_segment_git(char** prompt, unsigned int* prompt_len, int* is_first, int* 
     }
 
     if (repo_dirty) {
-        color = COLOR_BG_VCS_DIRTY;
+        color_fg = COLOR_FG_VCS_DIRTY;
+        color_bg = COLOR_BG_VCS_DIRTY;
         strncpy(icon, PLUSMINUS, 4);
     } else {
-        color = COLOR_BG_VCS_CLEAN;
+        color_fg = COLOR_FG_VCS_CLEAN;
+        color_bg = COLOR_BG_VCS_CLEAN;
         strncpy(icon, BRANCH, 4);
     }
 
     // add segment to prompt buffer
     snprintf(text, 64, " %s %s ", icon, branch);
-    al_gen_segment(prompt, prompt_len, COLOR_FG_VCS, color, FNT_BOLD, text, is_first, last_bg, orientation);
+    al_gen_segment(prompt, prompt_len, color_fg, color_bg, FNT_BOLD, text, is_first, last_bg, orientation);
 
     return 0;
 }
