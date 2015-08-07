@@ -1,7 +1,7 @@
 arrowline - small shell prompt generator
 ========================================
 
-Small shell (bash/zsh) prompt generator written in C. Can use powerline symbols.
+Small shell (bash/zsh) prompt and/or statusline generator written in C. Can use powerline symbols.
 
 Features
 --------
@@ -29,24 +29,28 @@ Systemwide installation (as root) into `/usr/local/bin`:
 
     make install
 
-If you install by hand make sure that plain `git` `libgit2` is installed for git support.
+If you install by hand make sure that plain `git` and `libgit2` is installed for git support.
 
 
 Configuration
 -------------
 
-All configuration takes place in `config.h`.
+All configuration takes place in `config.h`, `config-prompt.h` and `config-status.h`.
 
 - Define the colors for the segments.
-- Select which segments to show:
+- Define the use of powerline symbols and escape chararcters
+- Select which segments to show (NULL-terminated array of generators)
 
-    - `STATUS`: display red X if last command's exit status != 0
-    - `HOST`: display username and hostname
-    - `CWD`: display `CWD_LEN` (defaults to 3) folders of current working directory
-    - `VCS`: display branch and status if current working dir is inside a version controlled directory
-        
-        - currently only supports git    
-        - uses commandline `git status` for faster status fetching
+### Segment List
+
+- *STATUS*: display red X if last command's exit status != 0
+- *HOST*: display username and hostname
+- *CWDPREFIX*: display the working directory prefix `home` `root` or `deep inside`
+- *CWD*: display `CWD_LEN` (defaults to 3) folders of current working directory
+- *VCS*`: display branch and status if current working dir is inside a version controlled directory
+    
+    - currently only supports git
+    - uses commandline `git status` for faster status fetching (HACK)
 
 
 Using arrowline
