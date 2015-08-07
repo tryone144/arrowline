@@ -44,34 +44,8 @@ int main(int argc, char** argv) {
     git_libgit2_init();
 #endif // USE_VCS_GIT
 
-    for (int s = 0; s < NUM_SEGMENTS; s++) {
-        int retval;
-        switch (USE_SEGMENTS[s]) {
-            case SEGMENT_STATUS:
-                // EXIT STATUS
-                retval = al_segment_status(&prompt, &prompt_len, &is_first, &sep_bg, orientation);
-                break;
-            case SEGMENT_HOST:
-                // USERNAME @ HOSTNAME
-                retval = al_segment_host(&prompt, &prompt_len, &is_first, &sep_bg, orientation);
-                break;
-            case SEGMENT_CWD_PREFIX:
-                // CURRENT WORKING DIRECTORY PREFIX
-                retval = al_segment_cwd_prefix(&prompt, &prompt_len, &is_first, &sep_bg, orientation);
-                break;
-            case SEGMENT_CWD:
-                // CURRENT WORKING DIRECTORY
-                retval = al_segment_cwd(&prompt, &prompt_len, &is_first, &sep_bg, orientation);
-                break;
-            case SEGMENT_VCS:
-                // VCS BRANCH STATUS (GIT)
-                retval = al_segment_vcs(&prompt, &prompt_len, &is_first, &sep_bg, orientation);
-                break;
-            default:
-                perror("ERROR: can't generate unknown/invalid segment");
-                exit(EXIT_FAILURE);
-        }
-        if (retval != 0) {
+    for (int s = 0; s < NUM_PROMPT_SEGMENTS; s++) {
+        if (PROMPT_SEGMENTS[s](&prompt, &prompt_len, &is_first, &sep_bg, orientation) != 0) {
             perror("ERROR: can't generate segment");
             exit(EXIT_FAILURE);
         }

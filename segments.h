@@ -15,6 +15,10 @@
 #define ORIENTATION_RIGHT 0
 #define ORIENTATION_LEFT 1
 
+/* signature of a segment generation function */
+typedef int (*segment_generator)(char** dest, unsigned int* prompt_len, int* is_first, int* last_bg, int orientation);
+
+
 /**
  * SEGMENT GENERATORS: GATHER INFORMATION AND FORMAT ACCORDINGLY
  **/

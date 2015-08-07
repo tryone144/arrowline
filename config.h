@@ -12,6 +12,8 @@
 #ifndef _CONFIG_H
 #define _CONFIG_H
 
+#include "segments.h"
+
 /**
  * CONSTANTS: DO NOT CHANGE!
  **/
@@ -22,13 +24,6 @@
 #define OUTPUT_ZSH 4
 #define OUTPUT_LEMONBAR 8
 #define OUTPUT_DZEN2 16
-
-/* segment identifiers (set below) */
-#define SEGMENT_STATUS 1
-#define SEGMENT_HOST 2
-#define SEGMENT_CWD_PREFIX 8
-#define SEGMENT_CWD 4
-#define SEGMENT_VCS 32
 
 /* buffer length */
 #define BUF_FORMAT_LEN 48
@@ -82,13 +77,13 @@
 #define STATUS_OUTPUT_FORMAT OUTPUT_LEMONBAR
 
 /* segments to use */
-static const unsigned int USE_SEGMENTS[] = {
-    SEGMENT_STATUS,
-    SEGMENT_HOST,
-    SEGMENT_CWD_PREFIX,
-    SEGMENT_CWD,
-    SEGMENT_VCS
+static const segment_generator PROMPT_SEGMENTS[] = {
+    al_segment_status,
+    al_segment_host,
+    al_segment_cwd_prefix,
+    al_segment_cwd,
+    al_segment_vcs
 };
-static const int NUM_SEGMENTS = sizeof(USE_SEGMENTS) / sizeof(int);
+static const int NUM_PROMPT_SEGMENTS = sizeof(PROMPT_SEGMENTS) / sizeof(segment_generator);
 
 #endif // _CONFIG_H
