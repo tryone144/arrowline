@@ -3,7 +3,7 @@
  * powerline-like shell prompt generator
  *
  * file: segments.h
- * v0.7 / 2015.08.07
+ * v0.7 / 2015.09.24
  *
  * (c) 2015 Bernd Busse
  * The MIT License (MIT)
@@ -14,7 +14,6 @@
 
 /* signature of a segment generation function */
 typedef int (*segment_generator)(char** dest, unsigned int* maxlen, int* is_first, int* last_bg, int position);
-
 
 /**
  * SEGMENT GENERATORS: GATHER INFORMATION AND FORMAT ACCORDINGLY

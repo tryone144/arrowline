@@ -62,7 +62,7 @@ Put into your `.bashrc`:
 
     # arrowline prompt
     function _update_ps1() {
-        export PS1="$(arrowline ${?} 2> /dev/null)"
+        export PS1="$( arrowline ${?} 2> /dev/null || echo 'arrowline failed! [\u@\h \W]\$ ' )"
     }
     export PROMPT_COMMAND=_update_ps1
 
@@ -73,7 +73,6 @@ TODO
 - zsh usage information
 - add new segments
 - better status fetching for git
-- support for status bars (i3bar, dzen2, lemonbar)
 
 
 License

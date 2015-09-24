@@ -3,7 +3,7 @@
  * powerline-like shell prompt generator
  *
  * file: arrowline.c
- * v0.7 / 2015.08.07
+ * v0.7 / 2015.09.24
  *
  * (c) 2015 Bernd Busse
  * The MIT License (MIT)
@@ -17,7 +17,7 @@
     #include <git2.h>
 #endif // USE_VCS_GIT
 
-#include "config-prompt.h"
+#include "config.h"
 #include "renderer.h"
 #include "utils.h"
 
@@ -51,8 +51,8 @@ int main(int argc, char** argv) {
 #endif // USE_VCS_GIT
     
     if (position == POSITION_LEFT) {
-        for (int s = 0; s < NUM_PROMPT_SEGMENTS_LEFT; s++) {
-            if ((gen = PROMPT_SEGMENTS_LEFT[s]) == NULL) {
+        for (int s = 0; s < NUM_SEGMENTS_LEFT; s++) {
+            if ((gen = SEGMENTS_LEFT[s]) == NULL) {
                 break;
             }
             if (gen(&prompt, &prompt_len, &is_first, &sep_bg, POSITION_LEFT) != 0) {
@@ -66,8 +66,8 @@ int main(int argc, char** argv) {
         al_resize_char_buffer(&prompt, " ", &prompt_len, 2);
         al_string_cat(prompt, " ", prompt_len);
     } else {
-        for (int s = 0; s < NUM_PROMPT_SEGMENTS_RIGHT; s++) {
-            if ((gen = PROMPT_SEGMENTS_RIGHT[s]) == NULL) {
+        for (int s = 0; s < NUM_SEGMENTS_RIGHT; s++) {
+            if ((gen = SEGMENTS_RIGHT[s]) == NULL) {
                 break;
             }
             if (gen(&prompt, &prompt_len, &is_first, &sep_bg, POSITION_RIGHT) != 0) {

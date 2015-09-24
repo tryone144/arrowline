@@ -15,7 +15,7 @@ pkgs_CFLAGS = $(shell pkg-config --cflags $(pkgs))
 pkgs_LIBS = $(shell pkg-config --libs $(pkgs))
 
 # Configuration
-config_CFLAGS = -DUSE_VCS_GIT
+#config_CFLAGS = -DUSE_VCS_GIT
 
 # Compiler Flags
 CFLAGS += -DPROGNAME=\"${NAME}\" -DVERSION=\"${VERSION}\"
@@ -24,35 +24,25 @@ CFLAGS := $(base_CFLAGS) $(pkgs_CFLAGS) $(config_CFLAGS) $(CFLAGS)
 LDFLAGS := $(base_LIBS) $(pkgs_LIBS)
 
 # Executable
-EXE_PROMPT = arrowline
-EXE_BAR = arrowbar
+EXE = arrowline
 
 # Sources
-SRCS = renderer.c segments.c utils.c
-SRCS_PROMPT = arrowline.c
-SRCS_BAR = arrowbar.c
-
+SRCS = arrowline.c renderer.c segments.c utils.c
 OBJS = $(SRCS:.c=.o)
-OBJS_PROMPT = $(SRCS_PROMPT:.c=.o)
-OBJS_BAR = $(SRCS_BAR:.c=.o)
 
 PREFIX = /usr/local
 
-all: $(EXE_PROMPT) $(EXE_BAR)
+all: $(EXE)
 
-$(EXE_PROMPT): $(OBJS) $(OBJS_PROMPT)
-	$(CC) $(OBJS) $(OBJS_PROMPT) $(LDFLAGS) -o $@
+$(EXE): $(OBJS)
+	$(CC) $(OBJS) $(LDFLAGS) -o $@
 
-$(EXE_BAR): $(OBJS) $(OBJS_BAR)
-	$(CC) $(OBJS) $(OBJS_BAR) $(LDFLAGS) -o $@
-
-.o: $(SRCS) $(SRCS_PROMPT) $(SRCS_BAR)
+.o: $(SRCS)
 	$(CC) $(CFLAGS) $< -o $@
 
 .PHONY: clean
 clean:
-	rm -f *.o && rm -f $(EXE_PROMPT) && rm -f $(EXE_BAR)
+	rm -f *.o && rm -f $(EXE)
 
-install: $(EXE_PROMPT) $(EXE_BAR)
-	install -Dm755 $(EXE_PROMPT) $(PREFIX)/bin/$(EXE_PROMPT)
-	install -Dm755 $(EXE_BAR) $(PREFIX)/bin/$(EXE_BAR)
+install: $(EXE)
+	install -Dm755 $(EXE) $(PREFIX)/bin/$(EXE)
