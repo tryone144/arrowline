@@ -3,7 +3,7 @@
  * powerline-like shell prompt generator
  *
  * file: arrowline.c
- * v0.7 / 2015.09.24
+ * v0.7 / 2015.10.07
  *
  * (c) 2015 Bernd Busse
  * The MIT License (MIT)
@@ -34,13 +34,6 @@ int main(int argc, char** argv) {
         }
     }
 
-    char* prompt; // prompt buffer
-    unsigned int prompt_len = BUF_PROMPT_LEN;
-    if ((prompt = calloc(prompt_len, sizeof(char))) == NULL) {
-        perror("ERROR: can't allocate prompt buffer");
-        return EXIT_FAILURE;
-    }
-
     int sep_bg = 0;
     int is_first = 1;
     segment_generator gen;
@@ -55,29 +48,28 @@ int main(int argc, char** argv) {
             if ((gen = SEGMENTS_LEFT[s]) == NULL) {
                 break;
             }
-            if (gen(&prompt, &prompt_len, &is_first, &sep_bg, POSITION_LEFT) != 0) {
+            if (gen(&is_first, &sep_bg, POSITION_LEFT) != 0) {
                 perror("ERROR: can't generate segment");
                 exit(EXIT_FAILURE);
             }
         }
 
         // end prompt and add trailing space
-        al_segment_end(&prompt, &prompt_len, sep_bg, POSITION_LEFT);
-        al_resize_char_buffer(&prompt, " ", &prompt_len, 2);
-        al_string_cat(prompt, " ", prompt_len);
+        al_segment_end(sep_bg, POSITION_LEFT);
+        fprintf(stdout, " ");
     } else {
         for (int s = 0; s < NUM_SEGMENTS_RIGHT; s++) {
             if ((gen = SEGMENTS_RIGHT[s]) == NULL) {
                 break;
             }
-            if (gen(&prompt, &prompt_len, &is_first, &sep_bg, POSITION_RIGHT) != 0) {
+            if (gen(&is_first, &sep_bg, POSITION_RIGHT) != 0) {
                 perror("ERROR: can't generate segment");
                 exit(EXIT_FAILURE);
             }
         }
 
         // end prompt without spaces
-        al_segment_end(&prompt, &prompt_len, sep_bg, POSITION_RIGHT);
+        al_segment_end(sep_bg, POSITION_RIGHT);
     }
 
 #ifdef USE_VCS_GIT
@@ -85,9 +77,8 @@ int main(int argc, char** argv) {
     git_libgit2_shutdown();
 #endif // USE_VCS_GIT
 
-    // output prompt buffer to stdout and exit
-    fprintf(stdout, prompt);
-    free(prompt);
+    // flush stdout and exit
+    fflush(stdout);
     
     return EXIT_SUCCESS;
 }

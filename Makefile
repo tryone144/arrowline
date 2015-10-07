@@ -15,7 +15,7 @@ pkgs_CFLAGS = $(shell pkg-config --cflags $(pkgs))
 pkgs_LIBS = $(shell pkg-config --libs $(pkgs))
 
 # Configuration
-#config_CFLAGS = -DUSE_VCS_GIT
+config_CFLAGS = -DUSE_VCS_GIT
 
 # Compiler Flags
 CFLAGS += -DPROGNAME=\"${NAME}\" -DVERSION=\"${VERSION}\"

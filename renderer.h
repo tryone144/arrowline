@@ -3,7 +3,7 @@
  * powerline-like shell prompt generator
  *
  * file: renderer.h
- * v0.7 / 2015.09.24
+ * v0.7 / 2015.10.07
  *
  * (c) 2015 Bernd Busse
  * The MIT License (MIT)
@@ -41,15 +41,15 @@
  **/
 
 /* generate segment with color codes and separator at begining */
-void al_gen_segment(char** dest, unsigned int* maxlen, int cur_fg, int cur_bg, int style, const char* text, int* is_first, int *last_bg, int position);
+void al_gen_segment(int cur_fg, int cur_bg, int style, const char* text, int* is_first, int *last_bg, int position);
 
 /* generate subsegment with color codes and path separator at begining */
-void al_gen_subsegment(char** dest, unsigned int* maxlen, int cur_fg, int cur_bg, int sep_fg, int style, const char* text, int position);
+void al_gen_subsegment(int cur_fg, int cur_bg, int sep_fg, int style, const char* text, int position);
 
 /* generate start separator */
-void al_segment_start(char* dest, unsigned int maxlen, int bg, int position);
+void al_segment_start(int bg, int position);
 
 /* generate end separator with terminal color reset */
-void al_segment_end(char** dest, unsigned int* maxlen, int bg, int position);
+void al_segment_end(int bg, int position);
 
 #endif // _RENDERER_H

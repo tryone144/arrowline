@@ -3,7 +3,7 @@
  * powerline-like shell prompt generator
  *
  * file: utils.c
- * v0.7 / 2015.09.24
+ * v0.7 / 2015.10.07
  *
  * (c) 2015 Bernd Busse
  * The MIT License (MIT)
@@ -115,21 +115,6 @@ int al_last_command_failed() {
     return 0; // NOT failed
 }
 
-/* enlarge buffer if not large enough */
-void al_resize_char_buffer(char** dest, const char* buf, unsigned int* destlen, int step) {
-    if ((strlen(*dest) + strlen(buf) + 1) > *destlen) {
-        *destlen = *destlen + step;
-        char* newbuf = realloc(*dest, *destlen);
-        if (newbuf == NULL) {
-            perror("ERROR: can't allocate larger prompt buffer");
-            free(*dest);
-            exit(EXIT_FAILURE);
-        } else {
-            *dest = newbuf;
-        }
-    }
-}
-
 /* check if str starts with pre */
 int al_string_startswith(const char* str, const char* pre) {
     size_t len = strlen(pre);
@@ -137,12 +122,6 @@ int al_string_startswith(const char* str, const char* pre) {
         return 0; // compare string pre is too long
     }
     return strncmp(str, pre, len) == 0;
-}
-
-/* safety wrapper arround strncat */
-void al_string_cat(char* dst, const char* str, const unsigned int maxlen) {
-    strncat(dst, str, maxlen - strlen(dst));
-    dst[maxlen-1] = '\0';
 }
 
 /* return directory level of path */

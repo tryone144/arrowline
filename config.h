@@ -3,7 +3,7 @@
  * powerline-like shell prompt generator
  *
  * file: config.h
- * v0.7 / 2015.09.24
+ * v0.7 / 2015.10.07
  *
  * (c) 2015 Bernd Busse
  * The MIT License (MIT)
@@ -22,10 +22,6 @@
 #define OUTPUT_PLAIN 1
 #define OUTPUT_BASH 2
 #define OUTPUT_ZSH 4
-
-/* buffer length */
-#define BUF_FORMAT_LEN 48
-#define BUF_PROMPT_LEN 128
 
 /**
  * SEGMENT COLOR CODES
@@ -81,6 +77,7 @@ static const segment_generator SEGMENTS_LEFT[] = {
     al_segment_host,
     al_segment_cwd_prefix,
     al_segment_cwd,
+    al_segment_vcs,
     NULL
 };
 

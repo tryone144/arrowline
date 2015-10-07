@@ -3,7 +3,7 @@
  * powerline-like shell prompt generator
  *
  * file: segments.c
- * v0.7 / 2015.09.24
+ * v0.7 / 2015.10.07
  *
  * (c) 2015 Bernd Busse
  * The MIT License (MIT)
@@ -23,7 +23,7 @@
  **/
 
 /* show date and time */
-int al_segment_datetime(char** dest, unsigned int* maxlen, int* is_first, int* last_bg, int position) {
+int al_segment_datetime(int* is_first, int* last_bg, int position) {
     char text[2][64];
     int color_fg = 0;
     int color_bg = 2;
@@ -41,14 +41,14 @@ int al_segment_datetime(char** dest, unsigned int* maxlen, int* is_first, int* l
     // add segment to prompt buffer
     snprintf(text[0], 64, " %s ", date);
     snprintf(text[1], 64, " %s ", time);
-    al_gen_segment(dest, maxlen, color_fg, color_bg, FNT_NORMAL, text[0], is_first, last_bg, position);
-    al_gen_subsegment(dest, maxlen, color_fg, color_bg, COLOR_SEP_CWD, FNT_NORMAL, text[1], position);
+    al_gen_segment(color_fg, color_bg, FNT_NORMAL, text[0], is_first, last_bg, position);
+    al_gen_subsegment(color_fg, color_bg, COLOR_SEP_CWD, FNT_NORMAL, text[1], position);
 
     return 0;
 }
 
 /* show username and hostname with colorcodes for ROOT or SSH */
-int al_segment_host(char** prompt, unsigned int* prompt_len, int* is_first, int* last_bg, int position) {
+int al_segment_host(int* is_first, int* last_bg, int position) {
     char text[64];
     int color_fg = COLOR_FG_HOST_USER;
     int color_bg = COLOR_BG_HOST_USER;
@@ -74,26 +74,26 @@ int al_segment_host(char** prompt, unsigned int* prompt_len, int* is_first, int*
 
     // add segment to prompt buffer
     snprintf(text, 64, " %s@%s ", username, hostname);
-    al_gen_segment(prompt, prompt_len, color_fg, color_bg, FNT_BOLD, text, is_first, last_bg, position);
+    al_gen_segment(color_fg, color_bg, FNT_BOLD, text, is_first, last_bg, position);
 
     return 0;
 }
 
 /* show last exit status if command failed */
-int al_segment_status(char** prompt, unsigned int* prompt_len, int* is_first, int* last_bg, int position) {
+int al_segment_status(int* is_first, int* last_bg, int position) {
     char text[8];
 
     // add segment to prompt buffer
     if (al_last_command_failed()) {
         snprintf(text, 8, " %s ", BOLD_X);
-        al_gen_segment(prompt, prompt_len, COLOR_FG_STATUS, COLOR_BG_STATUS, FNT_BOLD, text, is_first, last_bg, position);
+        al_gen_segment(COLOR_FG_STATUS, COLOR_BG_STATUS, FNT_BOLD, text, is_first, last_bg, position);
     }
 
     return 0;
 }
 
 /* show current working dir */
-int al_segment_cwd(char** prompt, unsigned int* prompt_len, int* is_first, int* last_bg, int position) {
+int al_segment_cwd(int* is_first, int* last_bg, int position) {
     char dirs[CWD_LEN][64];
 
     char home[64];
@@ -129,10 +129,10 @@ int al_segment_cwd(char** prompt, unsigned int* prompt_len, int* is_first, int* 
             // add segment to prompt buffer
             style = i == 0 ? FNT_BOLD : FNT_NORMAL;
             if (first_path) {
-                al_gen_segment(prompt, prompt_len, COLOR_FG_CWD, COLOR_BG_CWD, style, text, is_first, last_bg, position);
+                al_gen_segment(COLOR_FG_CWD, COLOR_BG_CWD, style, text, is_first, last_bg, position);
                 first_path = 0;
             } else {
-                al_gen_subsegment(prompt, prompt_len, COLOR_FG_CWD, COLOR_BG_CWD, COLOR_SEP_CWD, style, text, position);
+                al_gen_subsegment(COLOR_FG_CWD, COLOR_BG_CWD, COLOR_SEP_CWD, style, text, position);
             }
         }
     }
@@ -141,7 +141,7 @@ int al_segment_cwd(char** prompt, unsigned int* prompt_len, int* is_first, int* 
 }
 
 /* show current working dir prefix */
-int al_segment_cwd_prefix(char** prompt, unsigned int* prompt_len, int* is_first, int* last_bg, int position) {
+int al_segment_cwd_prefix(int* is_first, int* last_bg, int position) {
     char text[16];
 
     char prefix[16];
@@ -172,14 +172,14 @@ int al_segment_cwd_prefix(char** prompt, unsigned int* prompt_len, int* is_first
 
     // add segment to prompt buffer
     snprintf(text, 16, " %s ", prefix);
-    al_gen_segment(prompt, prompt_len, COLOR_FG_CWD_PREFIX, COLOR_BG_CWD_PREFIX, FNT_BOLD, text, is_first, last_bg, position);
+    al_gen_segment(COLOR_FG_CWD_PREFIX, COLOR_BG_CWD_PREFIX, FNT_BOLD, text, is_first, last_bg, position);
 
     return 0;
 }
 
 #ifdef USE_VCS_GIT
 /* show branch status for git repository */
-int al_segment_git(char** prompt, unsigned int* prompt_len, int* is_first, int* last_bg, int position) {
+int al_segment_git(int* is_first, int* last_bg, int position) {
     char text[64];
     char cwd[512];
     char branch[32];
@@ -224,18 +224,18 @@ int al_segment_git(char** prompt, unsigned int* prompt_len, int* is_first, int* 
 
     // add segment to prompt buffer
     snprintf(text, 64, " %s %s ", icon, branch);
-    al_gen_segment(prompt, prompt_len, color_fg, color_bg, FNT_BOLD, text, is_first, last_bg, position);
+    al_gen_segment(color_fg, color_bg, FNT_BOLD, text, is_first, last_bg, position);
 
     return 0;
 }
 #endif // USE_VCS_GIT
 
 /* show vcs status if cwd is part of a vcs */
-int al_segment_vcs(char** prompt, unsigned int* prompt_len, int* is_first, int* last_bg, int position) {
+int al_segment_vcs(int* is_first, int* last_bg, int position) {
     int ret = 1;
 
 #ifdef USE_VCS_GIT
-    ret = al_segment_git(prompt, prompt_len, is_first, last_bg, position);
+    ret = al_segment_git(is_first, last_bg, position);
 #endif // USE_VCS_GIT
 
     if (ret == 0 || ret == 1) {
