@@ -35,7 +35,7 @@ If you install by hand make sure that plain `git` and `libgit2` is installed for
 Configuration
 -------------
 
-All configuration takes place in `config.h`, `config-prompt.h` and `config-status.h`.
+All configuration takes place in `config.h`.
 
 - Define the colors for the segments.
 - Define the use of powerline symbols and escape chararcters
