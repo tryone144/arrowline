@@ -23,9 +23,9 @@
 
 /* escape ANSI color codes for shell prompt */
 void al_ansi_escape_color(int fg, int bg, int style) {
-#if PROMPT_OUTPUT_FORMAT == OUTPUT_BASH
+#if OUTPUT_FORMAT == OUTPUT_BASH
     fprintf(stdout, "\\[\\e[0;38;5;%d;48;5;%d;%dm\\]", fg, bg, style);
-#elif PROMPT_OUTPUT_FORMAT == OUTPUT_ZSH
+#elif OUTPUT_FORMAT == OUTPUT_ZSH
     fprintf(stdout, "%%{\\e[0;38;5;%d;48;5;%d;%dm%%}", fg, bg, style);
 #else // PLAIN
     fprintf(stdout, "\\e[0;38;5;%d;48;5;%d;%dm", fg, bg, style);
@@ -34,9 +34,9 @@ void al_ansi_escape_color(int fg, int bg, int style) {
 
 /* escape ANSI fg color and reset bg color for shell prompt (end segment) */
 void al_ansi_escape_bg_reset(int bg) {
-#if PROMPT_OUTPUT_FORMAT == OUTPUT_BASH
+#if OUTPUT_FORMAT == OUTPUT_BASH
     fprintf(stdout, "\\[\\e[0;38;5;%d;49;22m\\]", bg);
-#elif PROMPT_OUTPUT_FORMAT == OUTPUT_ZSH
+#elif OUTPUT_FORMAT == OUTPUT_ZSH
     fprintf(stdout, "%%{\\e[0;38;5;%d;49;22m%%}", bg);
 #else // PLAIN
     fprintf(stdout, "\\e[0;38;5;%d;49;22m", bg);
@@ -45,9 +45,9 @@ void al_ansi_escape_bg_reset(int bg) {
 
 /* reset ANSI color codes for shell prompt */
 void al_ansi_escape_reset() {
-#if PROMPT_OUTPUT_FORMAT == OUTPUT_BASH
+#if OUTPUT_FORMAT == OUTPUT_BASH
     fprintf(stdout, "\\[\\e[0m\\]");
-#elif PROMPT_OUTPUT_FORMAT == OUTPUT_ZSH
+#elif OUTPUT_FORMAT == OUTPUT_ZSH
     fprintf(stdout, "%%{\\e[0m%%}");
 #else // PLAIN
     fprintf(stdout, "\\e[0m");
