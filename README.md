@@ -66,6 +66,11 @@ Put into your `.bashrc`:
     }
     export PROMPT_COMMAND=_update_ps1
 
+KNOW ISSUES
+-----------
+
+- libgit2 updates seem to break the binary. A simple rebuild should be enough. See [this Issue](https://github.com/tryone144/arrowline/issues/2).
+
 
 TODO
 ----
