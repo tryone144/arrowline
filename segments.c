@@ -19,7 +19,7 @@
 #include "segments.h"
 
 /* get human readable name of segement */
-char* al_get_name_for_segment(segmet_generator gen) {
+char* al_get_name_for_segment(segment_generator gen) {
     if (gen == SEGMENT_STATUS) {
         return "last exitcode";
     } else if (gen == SEGMENT_HOST) {

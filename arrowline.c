@@ -9,6 +9,7 @@
  * The MIT License (MIT)
  **/
 
+#include <stdarg.h>
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
@@ -17,6 +18,20 @@
 #include "renderer.h"
 #include "segments.h"
 #include "utils.h"
+
+/* clear term settings and exit with -1 */
+void die(const char* msg, ...) {
+    va_list va_args;
+    va_start(va_args, msg);
+
+    al_segment_end(0, POSITION_RIGHT);
+    fprintf(stderr, "Error: ");
+    vfprintf(stderr, msg, va_args);
+    fprintf(stderr, "\n");
+    
+    va_end(va_args);
+    exit(EXIT_FAILURE);
+}
 
 /* output formatted prompt */
 int main(int argc, char** argv) {
@@ -39,8 +54,7 @@ int main(int argc, char** argv) {
     if (position == POSITION_LEFT) {
         while ((gen = SEGMENTS_LEFT[s]) != NULL) {
             if (gen(&is_first, &sep_bg, POSITION_LEFT) != 0) {
-                fprintf(stderr, "ERROR: can't generate segment '%s': %s\n", al_get_name_for_segment(gen), last_error);
-                exit(EXIT_FAILURE);
+                die("can't generate segment '%s': %s\n", al_get_name_for_segment(gen), last_error);
             }
             s++;
         }
@@ -52,8 +66,7 @@ int main(int argc, char** argv) {
     } else {
         while ((gen = SEGMENTS_RIGHT[s]) != NULL) {
             if (gen(&is_first, &sep_bg, POSITION_RIGHT) != 0) {
-                fprintf(stderr, "ERROR: can't generate segment '%s': %s\n", al_get_name_for_segment(gen), last_error);
-                exit(EXIT_FAILURE);
+                die("can't generate segment '%s': %s\n", al_get_name_for_segment(gen), last_error);
             }
             s++;
         }
