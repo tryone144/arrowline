@@ -3,9 +3,9 @@
 # powerline-like shell prompt generator
 #
 # file: demo.sh
-# v0.7 / 2015.08.07
+# v0.7.5 / 2016.04.10
 #
-# (c) 2015 Bernd Busse
+# (c) 2016 Bernd Busse
 # The MIT License (MIT)
 #
 

@@ -3,9 +3,9 @@
  * powerline-like shell prompt generator
  *
  * file: config.h
- * v0.7 / 2015.10.07
+ * v0.7.5 / 2016.04.10
  *
- * (c) 2015 Bernd Busse
+ * (c) 2016 Bernd Busse
  * The MIT License (MIT)
  **/
 
@@ -85,9 +85,5 @@ static const segment_generator SEGMENTS_RIGHT[] = {
     al_segment_datetime,
     NULL
 };
-
-/* segment count (DO NOT CHANGE!) */
-static const int NUM_SEGMENTS_LEFT = sizeof(SEGMENTS_LEFT) / sizeof(segment_generator) - 1;
-static const int NUM_SEGMENTS_RIGHT = sizeof(SEGMENTS_RIGHT) / sizeof(segment_generator) - 1;
 
 #endif // _CONFIG_H

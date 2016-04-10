@@ -3,9 +3,9 @@
  * powerline-like shell prompt generator
  *
  * file: utils.h
- * v0.7 / 2015.10.07
+ * v0.7.5 / 2016.04.10
  *
- * (c) 2015 Bernd Busse
+ * (c) 2016 Bernd Busse
  * The MIT License (MIT)
  **/
 
@@ -14,15 +14,12 @@
 
 #include <pwd.h>
 
-#ifdef USE_VCS_GIT
-    #include <git2.h>
-#endif // USE_VCS_GIT
-
 /**
  * ENVIRONMENT HELPER FUNCTIONS AND WRAPPER
  **/
 
 extern int last_exit_status;
+extern char* last_error;
 
 /* copy path of current working directory into buf */
 int al_get_cwd(char* buf, size_t len);
@@ -52,11 +49,8 @@ int al_is_ssh_connection();
 int al_is_root_session();
 
 #ifdef USE_VCS_GIT
-    /* open git repository at path if it actually is a git repository */
-    int al_git_open_repo(const char* path, git_repository** repo);
-
     /* copy name of current git branch into buf */
-    int al_git_get_branch(char* buf, size_t len, git_repository* repo);
+    int al_git_get_branch(char* buf, size_t len);
 
     /* check if current git repo is clean or dirty */
     int al_git_is_dirty();

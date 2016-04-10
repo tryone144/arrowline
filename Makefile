@@ -1,8 +1,8 @@
 # ARROWLINE - powerline-like shell prompt generator
-# (c) 2015 Bernd Busse
+# (c) 2016 Bernd Busse
 
 NAME = arrowline
-VERSION = 0.7
+VERSION = 0.7.5
 
 # C Compiler
 CC := $(CC) -std=gnu11
@@ -10,9 +10,9 @@ CC := $(CC) -std=gnu11
 base_CFLAGS = -Wall -Wextra -pedantic -O2 -g
 base_LIBS = 
 
-pkgs = libgit2
-pkgs_CFLAGS = $(shell pkg-config --cflags $(pkgs))
-pkgs_LIBS = $(shell pkg-config --libs $(pkgs))
+#pkgs = 
+#pkgs_CFLAGS = $(shell pkg-config --cflags $(pkgs))
+#pkgs_LIBS = $(shell pkg-config --libs $(pkgs))
 
 # Configuration
 config_CFLAGS = -DUSE_VCS_GIT

@@ -3,9 +3,9 @@
  * powerline-like shell prompt generator
  *
  * file: utils.c
- * v0.7 / 2015.10.07
+ * v0.7.5 / 2016.04.10
  *
- * (c) 2015 Bernd Busse
+ * (c) 2016 Bernd Busse
  * The MIT License (MIT)
  **/
 
@@ -17,22 +17,14 @@
 #include <time.h>
 #include <unistd.h>
 
-#ifdef USE_VCS_GIT
-    #include <git2.h>
-#endif // USE_VCS_GIT
-
 #include "utils.h"
 
 /**
  * ENVIRONMENT HELPER FUNCTIONS AND WRAPPER
  **/
 
-#ifdef USE_VCS_GIT
-static const int INDEX_FLAGS = GIT_STATUS_INDEX_NEW | GIT_STATUS_INDEX_MODIFIED | GIT_STATUS_INDEX_DELETED | GIT_STATUS_INDEX_RENAMED | GIT_STATUS_INDEX_TYPECHANGE;
-static const int WT_FLAGS = GIT_STATUS_WT_NEW | GIT_STATUS_WT_MODIFIED | GIT_STATUS_WT_DELETED | GIT_STATUS_WT_RENAMED | GIT_STATUS_WT_TYPECHANGE | GIT_STATUS_WT_TYPECHANGE;
-#endif // USE_VCS_GIT
-
 int last_exit_status = 0;
+char *last_error = "";
 
 /* copy date / time according to format string fmt into buf */
 int al_get_datetime(char* buf, size_t len, const char* fmt) {
@@ -173,59 +165,66 @@ int al_get_dir_name(char* dest, size_t len, const char* path, int count) {
 }
 
 #ifdef USE_VCS_GIT
-/* open git repository at path if it actually is a git repository */
-int al_git_open_repo(const char* path, git_repository** repo) {
-    if (git_repository_open_ext(repo, path, 0, NULL) != 0) {
-        return -1; // error
-    }
-    return 0;
-}
-
 /* copy name of current git branch into buf */
-int al_git_get_branch(char* buf, size_t len, git_repository* repo) {
-    const char* branch = NULL;
-    git_reference* head = NULL;
+int al_git_get_branch(char* buf, size_t len) {
+    FILE *cmd_output;
+    char branch_name[32] = { 0 };
+    char *newline;
 
-    int err = git_repository_head(&head, repo);
-    if (err == GIT_EUNBORNBRANCH || err == GIT_ENOTFOUND) {
-        branch = NULL;
-    } else if (!err) {
-        branch = git_reference_shorthand(head);
-    } else {
+    cmd_output = popen("/usr/bin/git rev-parse --abbrev-ref HEAD 2>/dev/null", "r");
+    if (cmd_output == NULL) {
+        last_error = "cannot call /usr/bin/git";
         return -1; // error
     }
 
-    strncpy(buf, branch ? branch : "HEAD", len);
+    if (fgets(branch_name, 32, cmd_output) == NULL) {
+        if (pclose(cmd_output) == -1) {
+            last_error = "'git rev-parse' failed";
+            return -1; // error
+        } else {
+            return 1; // skip
+        }
+    }
+    
+    if (pclose(cmd_output) == -1) {
+        return -1; // error
+    }
+
+    newline = strstr(branch_name, "\n");
+    if (newline != NULL) {
+        *newline = '\0';
+    }
+
+    strncpy(buf, branch_name, len);
     buf[len-1] = '\0';
 
-    git_reference_free(head);
     return 0;
 }
 
-/* check if current git repo is clean or dirty 
- * HACK: INVOKE 'git status' and parse output */
+/* check if current git repo is clean or dirty */
 int al_git_is_dirty() {
-    FILE *cmd;
-    int modified = 0;
-    char modified_list[10] = { 0 };
+    FILE *cmd_output;
+    char modified_list[8] = { 0 };
 
-    cmd = popen("git status -s --ignore-submodules --porcelain", "r");
-
-    if (cmd == NULL) {
+    cmd_output = popen("/usr/bin/git status --ignore-submodules --porcelain 2>/dev/null", "r");
+    if (cmd_output == NULL) {
+        last_error = "cannot call /usr/bin/git";
         return -1; // error
     }
 
-    while (fgets(modified_list, 10, cmd) != NULL) {
-        if (sizeof(modified_list) != 0) {
-            modified = 1; // found modification
-            break;
+    if (fgets(modified_list, 8, cmd_output) == NULL) {
+        if (pclose(cmd_output) != 0) {
+            last_error = "'git status' failed";
+            return -1; // error
+        } else {
+            return 0; // not modified
         }
     }
 
-    if (pclose(cmd) != 0) {
-        return -1; // error
+    if (strlen(modified_list) != 0) {
+        return 1; // found modification
+    } else {
+        return 0;
     }
-
-    return modified;
 }
 #endif // USE_VCS_GIT

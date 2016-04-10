@@ -1,7 +1,7 @@
 arrowline - small shell prompt generator
 ========================================
 
-Small shell (bash/zsh) prompt and/or statusline generator written in C. Can use powerline symbols.
+Small shell (bash/zsh) prompt generator written in C. Can use powerline symbols.
 
 Features
 --------
@@ -29,7 +29,7 @@ Systemwide installation (as root) into `/usr/local/bin`:
 
     make install
 
-If you install by hand make sure that plain `git` and `libgit2` is installed for git support.
+If you install by hand make sure that `git` is installed for git status support.
 
 
 Configuration
@@ -50,7 +50,6 @@ All configuration takes place in `config.h`.
 - *VCS*`: display branch and status if current working dir is inside a version controlled directory
     
     - currently only supports git
-    - uses commandline `git status` for faster status fetching (HACK)
 
 
 Using arrowline
@@ -77,7 +76,6 @@ TODO
 
 - zsh usage information
 - add new segments
-- better status fetching for git
 
 
 License
@@ -85,7 +83,7 @@ License
 
 MIT/X Consortium License
 
-© 2015 Bernd Busse
+© 2016 Bernd Busse
 
 Permission is hereby granted, free of charge, to any person obtaining a
 copy of this software and associated documentation files (the "Software"),

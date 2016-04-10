@@ -3,9 +3,9 @@
  * powerline-like shell prompt generator
  *
  * file: segments.c
- * v0.7 / 2015.10.07
+ * v0.7.5 / 2016.04.10
  *
- * (c) 2015 Bernd Busse
+ * (c) 2016 Bernd Busse
  * The MIT License (MIT)
  **/
 
@@ -17,6 +17,23 @@
 #include "utils.h"
 
 #include "segments.h"
+
+/* get human readable name of segement */
+char* al_get_name_for_segment(segmet_generator gen) {
+    if (gen == SEGMENT_STATUS) {
+        return "last exitcode";
+    } else if (gen == SEGMENT_HOST) {
+        return "host- and username";
+    } else if (gen == SEGMENT_CWD_PREFIX) {
+        return "CWD prefix";
+    } else if (gen == SEGMENT_CWD) {
+        return "current working directory";
+    } else if (gen == SEGMENT_VCS) {
+        return "version control status";
+    } else {
+        return "unkown segment";
+    }
+}
 
 /**
  * SEGMENT GENERATORS: GATHER INFORMATION AND FORMAT ACCORDINGLY
@@ -181,35 +198,23 @@ int al_segment_cwd_prefix(int* is_first, int* last_bg, int position) {
 /* show branch status for git repository */
 int al_segment_git(int* is_first, int* last_bg, int position) {
     char text[64];
-    char cwd[512];
     char branch[32];
 
     char icon[4] = {0};
     int color_fg = 0;
     int color_bg = 0;
     
-    git_repository* repo = NULL;
+    int is_repo = 0;
     int repo_dirty = 0;
     
-    if (al_get_cwd(cwd, 512) != 0) {
-        return -1;
-    }
-
-    // get information from repository if exists
-    if (al_git_open_repo(cwd, &repo) != 0) {
-        return 1;
-    }
-
     // get current branch name
-    if (al_git_get_branch(branch, 32, repo) != 0) {
-        git_repository_free(repo);
-        return -1;
+    if ((is_repo = al_git_get_branch(branch, 32)) != 0) {
+        return is_repo;
     }
-    git_repository_free(repo);
 
     // change color and icon on branch state
     if ((repo_dirty = al_git_is_dirty()) == -1) {
-            return -1;
+        return -1;
     }
 
     if (repo_dirty) {
