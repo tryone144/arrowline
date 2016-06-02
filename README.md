@@ -2,6 +2,7 @@ arrowline - small shell prompt generator
 ========================================
 
 Small shell (bash/zsh) prompt generator written in C. Can use powerline symbols.
+[![Build Status](https://travis-ci.org/tryone144/arrowline.svg?branch=master)](https://travis-ci.org/tryone144/arrowline)
 
 Features
 --------

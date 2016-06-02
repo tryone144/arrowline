@@ -1,0 +1,6 @@
+dist: trusty
+language: c
+compiler:
+    - gcc
+script: make
+
